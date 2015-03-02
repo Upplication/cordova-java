@@ -86,7 +86,7 @@ cordova.config().getAuthor().setName("name");
 cordova.config().getAccess().add("*");
 // with launch-external
 cordova.config().getAccess().add("*", "yes");
-cordova.config().getAccess().add(Access.origin("*").value("disable").subdomains(true));
+cordova.config().getAccess().add(Access.create().origin("*").value("disable").subdomains(true));
 cordova.config().getPreferences().add("name", "value");
 // icon
 cordova.config().icon().add("src/img/icon.png");
