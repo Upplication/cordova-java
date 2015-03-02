@@ -25,28 +25,77 @@ cli.create(path, "dirName");
 
 ```java
 // when you create a project with the cli.create, you get an instance of the current cordovaProject
-CordovaProject cordovaPrj = cli.create(path, "dirName", "com.upplication.sample", "Sample");
+CordovaProject cordova = cli.create(path, "dirName", "com.upplication.sample", "Sample");
 // you can get the CordovaProject object from an existing cordova project
-CordovaProject cordovaPrj = Cordova.getProject(new File("/home/documents/existing-project"));
+CordovaProject cordova = Cordova.getProject(new File("/home/documents/existing-project"));
 ```
 
 ```java
 // add
-cordovaPrj.platform().add(Platform.IOs); // TODO: maybe addIos();
-cordovaPrj.platform().add(Platform.Android);
+cordova.platform().add(Platform.IOs); // TODO: maybe addIos();
+cordova.platform().add(Platform.Android);
 // remove
-cordovaPrj.platform().remove(Platform.Android); // TODO: maybe removeAndroid();
+cordova.platform().remove(Platform.Android); // TODO: maybe removeAndroid(); or platform().remove().android();
 // list
-List<Platform> platforms = cordovaPrj.platform().list();
+List<Platform> platforms = cordova.platform().list();
 ```
 
 ```java
-cordovaPrj.build();
-cordovaPrj.build(Platform.IOs);
-cordovaPrj.prepare();
-cordovaPrj.prepare(Platform.IOs);
-cordovaPrj.compile();
-cordovaPrj.compile(Platform.IOs);
+cordova.build();
+cordova.build(Platform.IOs);
+cordova.prepare();
+cordova.prepare(Platform.IOs);
+cordova.compile();
+cordova.compile(Platform.IOs);
 ```
 
+```java
+cordova.emulate(Platform.ANDROID);
+cordova.run(Platform.ANDROID);
+```
+
+```java
+cordova.plugin().add("org.apache.cordova.console");
+cordova.plugin().add("org.apache.cordova.console", "org.apache.cordova.device");
+// you can set the version
+cordova.plugin().add("org.apache.cordova.console@0.2.1");
+cordova.plugin().add("org.apache.cordova.console@latest");
+// you can add custom github repo
+cordova.plugin().add("https://github.com/apache/cordova-plugin-console.git");
+// you can add custom github repo with version
+cordova.plugin().add("https://github.com/apache/cordova-plugin-console.git@latest");
+// you can add paths
+cordova.plugin().add("../my_plugin_dir"); or cordova.plugin().add(new File("../my_plugin_dir"));
+// add plugins with vars
+cordova.plugin().add("org.apache.cordova.console", Plugin.Var.add("variable"));
+cordova.plugin().add("org.apache.cordova.console", Plugin.Var.add("variable"), Plugin.Var.add("anotherOne"));
+```
+
+And the best: Customize Cordova
+
+```java
+// basic info
+cordova.config().setName();
+cordova.config().setVersion(1,0,0);
+cordova.config().setDescription("description");
+// author
+cordova.config().getAuthor().setEmail("adad");
+cordova.config().getAuthor().setHref("adad");
+cordova.config().getAuthor().setName("name");
+// access
+cordova.config().getAccess().add("*");
+// with launch-external
+cordova.config().getAccess().add("*", "yes");
+cordova.config().getAccess().add(Access.origin("*").value("disable").subdomains(true));
+cordova.config().getPreferences().add("name", "value");
+// icon
+cordova.config().icon().add("src/img/icon.png");
+cordova.config().icon().add(Icon.create().src("src/img").height(100).width(100).density("zsdad"));
+// platform icon
+cordova.config().platform("android").icon().add("src/img/android/icon.png")
+cordova.config().platform("android").icon().add(Icon.create().src("src/img").density("ldpi"));
+// platform splash
+cordova.config().platform("android").splash().add(Splash.create().src("dest/splash.png").density("low"));
+cordova.config().platform("ios").splash().add(Splash.create().src("dest/splash.png").width(320).height(100));
+```
 
