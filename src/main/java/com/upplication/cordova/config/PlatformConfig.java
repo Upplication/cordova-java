@@ -12,12 +12,14 @@ public class PlatformConfig {
 
     private IconConfig iconConfig;
     private SplashConfig splashConfig;
+    private PreferencesConfig preferencesConfig;
 
     public PlatformConfig(Platform platform, ConfigProcessor configProcessor, Path configXml) {
         this.configXml = configXml;
         this.configProcessor = configProcessor;
-        this.iconConfig = new IconConfig(platform, configProcessor, configXml);
-        this.splashConfig =  new SplashConfig(platform, configProcessor, configXml);
+        this.iconConfig = new IconConfig(configXml, configProcessor, platform);
+        this.splashConfig =  new SplashConfig(configXml, configProcessor, platform);
+        this.preferencesConfig = new PreferencesConfig(configXml, configProcessor, platform);
     }
 
     public IconConfig icon() {
@@ -26,5 +28,9 @@ public class PlatformConfig {
 
     public SplashConfig splash() {
         return splashConfig;
+    }
+
+    public PreferencesConfig preference() {
+        return preferencesConfig;
     }
 }

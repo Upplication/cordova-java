@@ -103,6 +103,8 @@ cordova.config().platform(Platform.Android).icon().add(Icon.create().src("src/im
 // platform splash
 cordova.config().platform(Platform.Android).splash().add(Splash.create().src("dest/splash.png").density("low"));
 cordova.config().platform(Platform.IOs).splash().add(Splash.create().src("dest/splash.png").width(320).height(100));
+// platform preferences
+cordova.config().platform(Platform.Android).preferences().add("name", "value");
 ```
 
 Read data for the current project

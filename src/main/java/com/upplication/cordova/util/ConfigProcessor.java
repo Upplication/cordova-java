@@ -211,37 +211,61 @@ public class ConfigProcessor {
         return result;
     }
 
-    public void addPreference(Path configFile, String name, String value) throws IOException {
+    public void addPreference(Path configFile, String platform, String name, String value) throws IOException {
         Document document = openConfig(configFile);
 
         Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+        Element parent = widget;
+
+        if (platform != null) {
+            Node node = findNode(document, "platform", "name", platform);
+            if (node == null) {
+                // create platform
+                Element platformElement = document.createElement("platform");
+                platformElement.setAttribute("name", platform);
+                node = widget.appendChild(platformElement);
+            }
+
+            parent = (Element) node;
+        }
 
         Element accessElement = document.createElement(preferenceNodeName);
         accessElement.setAttribute("name", name);
         accessElement.setAttribute("value", value);
 
-        widget.appendChild(accessElement);
+        parent.appendChild(accessElement);
 
         saveConfig(configFile, document);
     }
 
-    public List<Preference> getPreferences(Path configFile) throws IOException {
-
+    public List<Preference> getPreferences(Path configFile, String platform) throws IOException {
         Document document = openConfig(configFile);
 
         Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+        Element parent = widget;
 
         List<Preference> result = new ArrayList<>();
 
-        NodeList nodeList = widget.getElementsByTagName(preferenceNodeName);
+        if (platform != null) {
+            Node node = findNode(document, "platform", "name", platform);
+            if (node == null) {
+                return result;
+            }
 
-        for (int i = 0; i < nodeList.getLength(); i++) {
+            parent = (Element) node;
+        }
+
+        NodeList nodeList = parent.getElementsByTagName(preferenceNodeName);
+
+        for (int i = 0; i < nodeList.getLength(); i++){
             Node node = nodeList.item(i);
-            Element element = (Element)node;
-            Preference access = Preference.create()
-                    .name(element.getAttribute("name"))
-                    .value(element.getAttribute("value"));
-            result.add(access);
+            if (node.getParentNode().equals(parent)){
+                Element element = (Element)node;
+                Preference access = Preference.create()
+                        .name(element.getAttribute("name"))
+                        .value(element.getAttribute("value"));
+                result.add(access);
+            }
         }
 
         return result;

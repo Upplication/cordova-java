@@ -24,7 +24,7 @@ public class IconConfig {
     private ConfigProcessor configProcessor;
     private Path configXml;
 
-    public IconConfig(Platform platform, ConfigProcessor configProcessor, Path configXml) {
+    public IconConfig(Path configXml, ConfigProcessor configProcessor, Platform platform) {
         this.platform = platform;
         this.configProcessor = configProcessor;
         this.configXml = configXml;

@@ -14,7 +14,7 @@ public class SplashConfig {
     private ConfigProcessor configProcessor;
     private Path configXml;
 
-    public SplashConfig(Platform platform, ConfigProcessor configProcessor, Path configXml) {
+    public SplashConfig(Path configXml, ConfigProcessor configProcessor, Platform platform) {
         this.configProcessor = configProcessor;
         this.platform = platform;
         this.configXml = configXml;

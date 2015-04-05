@@ -38,7 +38,8 @@ public class CordovaSpike {
         cordovaProject.config().platform(Platform.Android).splash().add(Splash.create().src("src/hola.png").width(100).height(300));
         cordovaProject.config().platform(Platform.Android).icon().add(Icon.create().src("src/hola.png").width(100).height(300));
 
-//        cordovaProject.prepare(Platform.Android);
+        cordovaProject.config().platform(Platform.Android).preference().add("android-pref", "pref");
+//        cordovaProject.prepare(Platform.Anxdroid);
 //        cordovaProject.compile();
 //        cordovaProject.build();
 
@@ -56,6 +57,7 @@ public class CordovaSpike {
         System.out.println(cordovaProject.config().access().getAll());
         System.out.println(cordovaProject.config().platform(Platform.Android).icon().getAll());
         System.out.println(cordovaProject.config().platform(Platform.Android).splash().getAll());
+        System.out.println(cordovaProject.config().platform(Platform.Android).preference().getAll());
     }
 
 }

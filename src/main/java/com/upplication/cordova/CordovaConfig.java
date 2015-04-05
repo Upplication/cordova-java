@@ -22,9 +22,9 @@ public class CordovaConfig {
         // TODO: https://keyholesoftware.com/2014/02/17/dependency-injection-options-for-java/
         this.configProcessor = new ConfigProcessor();
         this.accessConfig = new AccessConfig(getConfigXml(), configProcessor);
-        this.preferencesConfig = new PreferencesConfig(getConfigXml(), configProcessor);
+        this.preferencesConfig = new PreferencesConfig(getConfigXml(), configProcessor, null);
         this.authorConfig = new AuthorConfig(getConfigXml(), configProcessor);
-        this.iconConfigBase = new IconConfig(null, configProcessor, getConfigXml());
+        this.iconConfigBase = new IconConfig(getConfigXml(), configProcessor, null);
     }
 
     public void setName(String name) throws IOException {
