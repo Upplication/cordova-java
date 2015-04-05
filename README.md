@@ -32,83 +32,83 @@ CordovaProject cordovaProject = cordova.getProject(new File("/home/user/projects
 
 ```java
 // add
-cordova.platform().add(Platform.IOs);
-cordova.platform().add(Platform.Android);
+cordovaProject.platform().add(Platform.IOs);
+cordovaProject.platform().add(Platform.Android);
 // remove
-cordova.platform().remove(Platform.Android);
+cordovaProject.platform().remove(Platform.Android);
 // list
-List<Platform> platforms = cordova.platform().list();
+List<Platform> platforms = cordovaProject.platform().list();
 ```
 
 ```java
-cordova.build();
-cordova.build(Platform.IOs);
-cordova.prepare();
-cordova.prepare(Platform.IOs);
-cordova.compile();
-cordova.compile(Platform.IOs);
+cordovaProject.build();
+cordovaProject.build(Platform.IOs);
+cordovaProject.prepare();
+cordovaProject.prepare(Platform.IOs);
+cordovaProject.compile();
+cordovaProject.compile(Platform.IOs);
 ```
 
 ```java
-cordova.emulate(Platform.ANDROID);
-cordova.run(Platform.ANDROID);
+cordovaProject.emulate(Platform.ANDROID);
+cordovaProject.run(Platform.ANDROID);
 ```
 
 ```java
-cordova.plugin().add("org.apache.cordova.console");
-cordova.plugin().add("org.apache.cordova.console", "org.apache.cordova.device");
+cordovaProject.plugin().add("org.apache.cordova.console");
+cordovaProject.plugin().add("org.apache.cordova.console", "org.apache.cordova.device");
 // you can set the version
-cordova.plugin().add("org.apache.cordova.console@0.2.1");
-cordova.plugin().add("org.apache.cordova.console@latest");
+cordovaProject.plugin().add("org.apache.cordova.console@0.2.1");
+cordovaProject.plugin().add("org.apache.cordova.console@latest");
 // you can add custom github repo
-cordova.plugin().add("https://github.com/apache/cordova-plugin-console.git");
+cordovaProject.plugin().add("https://github.com/apache/cordova-plugin-console.git");
 // you can add custom github repo with version
-cordova.plugin().add("https://github.com/apache/cordova-plugin-console.git@latest");
+cordovaProject.plugin().add("https://github.com/apache/cordova-plugin-console.git@latest");
 // you can add paths
-cordova.plugin().add(new File("../my_plugin_dir"));
+cordovaProject.plugin().add(new File("../my_plugin_dir"));
 // add plugins with vars
-cordova.plugin().add("org.apache.cordova.console", Plugin.Var.add("variable"));
-cordova.plugin().add("org.apache.cordova.console", Plugin.Var.add("variable"), Plugin.Var.add("anotherOne"));
+cordovaProject.plugin().add("org.apache.cordova.console", Plugin.Var.add("variable"));
+cordovaProject.plugin().add("org.apache.cordova.console", Plugin.Var.add("variable"), Plugin.Var.add("anotherOne"));
 // read installed plugin
-List<Plugin> plugins = cordova.plugin().list();
+List<Plugin> plugins = cordovaProject.plugin().list();
 // find plugin with terms bar and code as case-insensitive substrings
-List<Plugin> plugins = cordova.plugin().search("bar", "code");
+List<Plugin> plugins = cordovaProject.plugin().search("bar", "code");
 ```
 
 And the best: Customize Cordova
 
 ```java
 // basic info
-cordova.config().setName();
-cordova.config().setVersion(1,0,0);
+cordovaProject.config().setName();
+cordovaProject.config().setVersion(1,0,0);
 // if you want custom version for app
-cordova.config().setVersion(Version.create()
+cordovaProject.config().setVersion(Version.create()
     .version("1.0.0")
     .iosCfBundleVersion("3.3.3")
     .androidVersionCode(7));
 
-cordova.config().setDescription("description");
+cordovaProject.config().setDescription("description");
 // author
-cordova.config().author().setEmail("adad");
-cordova.config().author().setHref("adad");
-cordova.config().author().setName("name");
+cordovaProject.config().author().setEmail("adad");
+cordovaProject.config().author().setHref("adad");
+cordovaProject.config().author().setName("name");
 // access
-cordova.config().access().add("*");
+cordovaProject.config().access().add("*");
 // with launch-external
-cordova.config().access().add("*", "yes");
-cordova.config().access().add(Access.create().origin("*").value("disable").subdomains(true));
-cordova.config().preferences().add("name", "value");
+cordovaProject.config().access().add("*", "yes");
+cordovaProject.config().access().add(Access.create().origin("*").value("disable").subdomains(true));
+cordovaProject.config().preferences().add("name", "value");
 // icon
-cordova.config().icon().add("src/img/icon.png");
-cordova.config().icon().add(Icon.create().src("src/img").height(100).width(100).density("zsdad"));
+cordovaProject.config().icon().add("src/img/icon.png");
+cordovaProject.config().icon().add(Icon.create().src("src/img").height(100).width(100).density("zsdad"));
 // platform icon
-cordova.config().platform(Platform.Android).icon().add("src/img/android/icon.png")
-cordova.config().platform(Platform.Android).icon().add(Icon.create().src("src/img").density("ldpi"));
+cordovaProject.config().platform(Platform.Android).icon().add("src/img/android/icon.png")
+cordovaProject.config().platform(Platform.Android).icon().add(Icon.create().src("src/img").density("ldpi"));
 // platform splash
-cordova.config().platform(Platform.Android).splash().add(Splash.create().src("dest/splash.png").density("low"));
-cordova.config().platform(Platform.IOs).splash().add(Splash.create().src("dest/splash.png").width(320).height(100));
+cordovaProject.config().platform(Platform.Android).splash().add(Splash.create().src("dest/splash.png").density("low"));
+cordovaProject.config().platform(Platform.IOs).splash().add(Splash.create().src("dest/splash.png").width(320).height(100));
 // platform preferences
-cordova.config().platform(Platform.Android).preferences().add("name", "value");
+cordovaProject.config().platform(Platform.Android).preferences().add("name", "value");
 ```
 
 Read data for the current project
