@@ -4,16 +4,20 @@ Cordova Java Client to automate tasks
 
 ## Examples Usages
 
+```java
+// create a new cordova instance ready to use
+Cordova cordova = new Cordova("path to node", "path to cordova");
+```
 
 ```java
 // get cordova cli
-Cordova cordova = new Cordova("path to node", "path to cordova");
 CordovaCLI cli = cordova.getCLI();
 ```
 
 ```java
+// create a project
 cli.create(path, "dirName", "com.upplication.sample", "Sample");
-// creat a project with cordova default name
+// create a project with cordova default name
 cli.create(path, "dirName", "com.upplication.sample"); 
 // create a project with cordova default name and bundleid
 cli.create(path, "dirName"); 
@@ -21,17 +25,17 @@ cli.create(path, "dirName");
 
 ```java
 // when you create a project with the cli.create, you get an instance of the current cordovaProject
-CordovaProject cordova = cli.create(path, "dirName", "com.upplication.sample", "Sample");
+CordovaProject cordovaProject = cli.create(path, "dirName", "com.upplication.sample", "Sample");
 // you can get the CordovaProject object from an existing cordova project
-CordovaProject cordova = Cordova.getProject(new File("/home/user/projects/existing-project"));
+CordovaProject cordovaProject = cordova.getProject(new File("/home/user/projects/existing-project"));
 ```
 
 ```java
 // add
-cordova.platform().add(Platform.IOs); // TODO: maybe addIos();
+cordova.platform().add(Platform.IOs);
 cordova.platform().add(Platform.Android);
 // remove
-cordova.platform().remove(Platform.Android); // TODO: maybe removeAndroid(); or platform().remove().android();
+cordova.platform().remove(Platform.Android);
 // list
 List<Platform> platforms = cordova.platform().list();
 ```
@@ -110,29 +114,29 @@ cordova.config().platform(Platform.Android).preferences().add("name", "value");
 Read data for the current project
 
 ```java
-String name = cordova.config().getName();
-String version = cordova.config().getVersion();
-String description = cordova.config().getDescription();
+String name = cordovaProject.config().getName();
+String version = cordovaProject.config().getVersion();
+String description = cordovaProject.config().getDescription();
 
-String email = cordova.config().author().getEmail();
-String href = cordova.config().author().getHref();
-String name = cordova.config().author().getName();
+String email = cordovaProject.config().author().getEmail();
+String href = cordovaProject.config().author().getHref();
+String name = cordovaProject.config().author().getName();
 
-List<Icon> icons = cordova.config().icon().getAll();
-List<Access> access = cordova.config().access().getAll();
-List<Preferences> preferences = cordova.config().preferences().getAll();
-List<Icon> icons = cordova.config().platform(Platform.Android).icon().getAll();
-List<Splash> splash = cordova.config().platform(Platform.IOs).splash().getAll();
+List<Icon> icons = cordovaProject.config().icon().getAll();
+List<Access> access = cordovaProject.config().access().getAll();
+List<Preferences> preferences = cordovaProject.config().preferences().getAll();
+List<Icon> icons = cordovaProject.config().platform(Platform.Android).icon().getAll();
+List<Splash> splash = cordovaProject.config().platform(Platform.IOs).splash().getAll();
 
 // I want to add a new icon in the recently changed config.xml
 
-File file = cordova.getProject();
+File file = cordovaProject.getProject();
 Path dest = file.toPath().resolve(icon.get(0).getSrc());
 Files.copy(src, dest);
 
 // or if you are already changing your config.xml
 Icon icon = Icon.create().src("src/img").height(100).width(100);
-cordova.config().icon().add(icon);
-Files.copy(src, cordova.getProject().toPath().resolve(icon.getSrc()));
+cordovaProject.config().icon().add(icon);
+Files.copy(src, cordovaProject.getProject().toPath().resolve(icon.getSrc()));
 ```
 
