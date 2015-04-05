@@ -5,6 +5,7 @@ import com.upplication.cordova.util.ConfigProcessor;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * cordova.config().access().add("*");
@@ -33,5 +34,9 @@ public class AccessConfig {
     public void add(Access access) throws IOException {
         configProcessor.addAccess(configXml, access.getOrigin(),
                 access.getLaunchExternal(), access.getSubdomains());
+    }
+
+    public List<Access> getAll() throws IOException {
+        return configProcessor.getAccess(configXml);
     }
 }

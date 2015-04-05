@@ -19,11 +19,23 @@ public class AuthorConfig {
         configProcessor.setAuthorName(configXml, name);
     }
 
+    public String getName() throws IOException {
+        return configProcessor.getAuthorName(configXml);
+    }
+
     public void setHref(String href) throws IOException {
         configProcessor.setAuthorHref(configXml, href);
     }
 
+    public String getHref() throws IOException {
+        return configProcessor.getAuthorHref(configXml);
+    }
+
     public void setEmail(String email) throws IOException {
         configProcessor.setAuthorEmail(configXml, email);
+    }
+
+    public String getEmail() throws IOException {
+        return configProcessor.getAuthorEmail(configXml);
     }
 }

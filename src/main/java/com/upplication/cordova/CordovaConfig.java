@@ -31,8 +31,29 @@ public class CordovaConfig {
        configProcessor.setName(getConfigXml(), name);
     }
 
+    public String getName() throws IOException {
+        return configProcessor.getName(getConfigXml());
+    }
+
     public void setVersion(int mandatory, int minor, int revision) throws IOException {
-        configProcessor.setVersion(getConfigXml(), mandatory + "." + minor + "." + revision);
+        String version = mandatory + "." + minor + "." + revision;
+        setVersion(Version.create().version(version));
+    }
+
+    public void setVersion(Version version) throws IOException {
+        configProcessor.setVersion(getConfigXml(), version.getVersion(), version.getIosCfBundleVersion(), version.getAndroidVersionCode());
+    }
+
+    public Version getVersion() throws IOException {
+        return configProcessor.getVersion(getConfigXml());
+    }
+
+    public void setDescription(String description) throws IOException {
+        configProcessor.setDescription(getConfigXml(), description);
+    }
+
+    public String getDescription() throws IOException {
+        return configProcessor.getDescription(getConfigXml());
     }
 
     public AuthorConfig author() {

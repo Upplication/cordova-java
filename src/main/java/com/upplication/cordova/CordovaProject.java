@@ -67,4 +67,10 @@ public class CordovaProject {
     public CordovaConfig config() {
         return cordovaConfig;
     }
+
+    public File getProject(){
+        return project;
+    }
+
+
 }

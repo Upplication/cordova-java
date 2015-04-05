@@ -1,5 +1,6 @@
 package com.upplication.cordova.util;
 
+import com.upplication.cordova.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,6 +21,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Processes the cordova config.xml file
@@ -40,18 +43,38 @@ public class ConfigProcessor {
     /**
      * Sets the version of the application in the config.xml file
      *
-     * @param configFile Config file path
-     * @param version    Version
+     * @param configFile         Config file path
+     * @param version            Version
+     * @param iosCfBundleVersion ios Version
+     * @param androidVersionCode android    Version
      * @throws IOException
      */
-    public void setVersion(Path configFile, String version) throws IOException {
+    public void setVersion(Path configFile, String version, String iosCfBundleVersion, Integer androidVersionCode) throws IOException {
         Document document = openConfig(configFile);
 
         Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
 
         widget.setAttribute(versionAttrName, version);
 
+        if (iosCfBundleVersion != null)
+            widget.setAttribute("ios-CFBundleVersion", iosCfBundleVersion);
+
+        if (androidVersionCode != null)
+            widget.setAttribute("android-versionCode", androidVersionCode.toString());
+
         saveConfig(configFile, document);
+    }
+
+    public Version getVersion(Path configFile) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+
+        String version = widget.getAttribute(versionAttrName);
+
+        return Version.create().version(version)
+                .iosCfBundleVersion(widget.getAttribute("ios-CFBundleVersion"))
+                .androidVersionCode(getInteger(widget.getAttribute("android-versionCode")));
     }
 
     public void setName(Path configFile, String name) throws IOException {
@@ -64,6 +87,14 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    public String getName(Path configFile) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element nameTag = (Element) document.getElementsByTagName(nameNodeName).item(0);
+
+        return nameTag.getTextContent();
+    }
+
     public void setDescription(Path configFile, String description) throws IOException {
         Document document = openConfig(configFile);
 
@@ -72,6 +103,14 @@ public class ConfigProcessor {
         nameTag.setTextContent(description);
 
         saveConfig(configFile, document);
+    }
+
+    public String getDescription(Path configFile) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element descriptionTag = (Element) document.getElementsByTagName(descriptionNodeName).item(0);
+
+        return descriptionTag.getTextContent();
     }
 
     public void setAuthorName(Path configFile, String authorName) throws IOException {
@@ -84,6 +123,14 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    public String getAuthorName(Path configFile) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element nameTag = (Element) document.getElementsByTagName(authorNodeName).item(0);
+
+        return nameTag.getTextContent();
+    }
+
     public void setAuthorEmail(Path configFile, String authorEmail) throws IOException {
         Document document = openConfig(configFile);
 
@@ -94,6 +141,14 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    public String getAuthorEmail(Path configFile) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element nameTag = (Element) document.getElementsByTagName(authorNodeName).item(0);
+
+        return nameTag.getAttribute(authorEmailAttrName);
+    }
+
     public void setAuthorHref(Path configFile, String authorHref) throws IOException {
         Document document = openConfig(configFile);
 
@@ -102,6 +157,14 @@ public class ConfigProcessor {
         nameTag.setAttribute(authorHrefAttrName, authorHref);
 
         saveConfig(configFile, document);
+    }
+
+    public String getAuthorHref(Path configFile) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element nameTag = (Element) document.getElementsByTagName(authorNodeName).item(0);
+
+        return nameTag.getAttribute(authorHrefAttrName);
     }
 
     public void addAccess(Path configFile, String accessOrigin, String launchExternal, String subdomains) throws IOException {
@@ -125,6 +188,29 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    public List<Access> getAccess(Path configFile) throws IOException {
+
+        Document document = openConfig(configFile);
+
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+
+       List<Access> result = new ArrayList<>();
+
+        NodeList nodeList = widget.getElementsByTagName(accessNodeName);
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+            Element element = (Element)node;
+            Access access = Access.create()
+                    .origin(element.getAttribute("origin"))
+                    .subdomains(getBoolean(element.getAttribute("subdomains")))
+                    .launchExternal(getBoolean(element.getAttribute("launch-external")));
+            result.add(access);
+        }
+
+        return result;
+    }
+
     public void addPreference(Path configFile, String name, String value) throws IOException {
         Document document = openConfig(configFile);
 
@@ -137,6 +223,28 @@ public class ConfigProcessor {
         widget.appendChild(accessElement);
 
         saveConfig(configFile, document);
+    }
+
+    public List<Preference> getPreferences(Path configFile) throws IOException {
+
+        Document document = openConfig(configFile);
+
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+
+        List<Preference> result = new ArrayList<>();
+
+        NodeList nodeList = widget.getElementsByTagName(preferenceNodeName);
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            Element element = (Element)node;
+            Preference access = Preference.create()
+                    .name(element.getAttribute("name"))
+                    .value(element.getAttribute("value"));
+            result.add(access);
+        }
+
+        return result;
     }
 
     public void addIcon(Path configFile, String platform, String src, Integer width, Integer height, String density) throws IOException {
@@ -171,6 +279,41 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    public List<Icon> getIcons(Path configFile, String platform) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+        Element parent = widget;
+
+        List<Icon> result = new ArrayList<>();
+
+        if (platform != null) {
+            Node node = findNode(document, "platform", "name", platform);
+            if (node == null) {
+                return result;
+            }
+
+            parent = (Element) node;
+        }
+
+        NodeList nodeList = parent.getElementsByTagName("icon");
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+            if (node.getParentNode().equals(parent)){
+                Element element = (Element)node;
+                Icon icon = Icon.create()
+                        .src(element.getAttribute("src"))
+                        .width(getInteger(element.getAttribute("width")))
+                        .height(getInteger(element.getAttribute("height")))
+                        .density(element.getAttribute("density"));
+                result.add(icon);
+            }
+        }
+
+        return result;
+    }
+
     public void addSplash(Path configFile, String platform, String src, Integer width, Integer height, String density) throws IOException {
         Document document = openConfig(configFile);
 
@@ -201,6 +344,41 @@ public class ConfigProcessor {
         parent.appendChild(iconElement);
 
         saveConfig(configFile, document);
+    }
+
+    public List<Splash> getSplashs(Path configFile, String platform) throws IOException {
+        Document document = openConfig(configFile);
+
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+        Element parent = widget;
+
+        List<Splash> result = new ArrayList<>();
+
+        if (platform != null) {
+            Node node = findNode(document, "platform", "name", platform);
+            if (node == null) {
+                return result;
+            }
+
+            parent = (Element) node;
+        }
+
+        NodeList nodeList = parent.getElementsByTagName("splash");
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+            if (node.getParentNode().equals(parent)){
+                Element element = (Element)node;
+                Splash splash = Splash.create()
+                        .src(element.getAttribute("src"))
+                        .width(getInteger(element.getAttribute("width")))
+                        .height(getInteger(element.getAttribute("height")))
+                        .density(element.getAttribute("density"));
+                result.add(splash);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -256,6 +434,22 @@ public class ConfigProcessor {
         return null;
     }
 
+    private Integer getInteger(String number){
+        if (number == null || number.isEmpty())
+            return null;
+        else
+            return new Integer(number);
+    }
+
+    private Boolean getBoolean(String affirmative){
+        if (affirmative == null || affirmative.isEmpty())
+            return null;
+        else if (affirmative.equalsIgnoreCase("yes"))
+            return true;
+        else if (affirmative.equalsIgnoreCase("no"))
+            return false;
+        else throw new IllegalStateException("Unknown resulto to boolean: " + affirmative);
+    }
 
 
 }

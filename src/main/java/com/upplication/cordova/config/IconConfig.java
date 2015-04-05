@@ -3,9 +3,12 @@ package com.upplication.cordova.config;
 import com.upplication.cordova.Icon;
 import com.upplication.cordova.Platform;
 import com.upplication.cordova.util.ConfigProcessor;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * icon
@@ -33,6 +36,10 @@ public class IconConfig {
 
     public void add(Icon icon) throws IOException {
         configProcessor.addIcon(configXml, getPlatform(), icon.getSrc(), icon.getWidth(), icon.getHeight(), icon.getDensity());
+    }
+
+    public List<Icon> getAll() throws IOException {
+        return configProcessor.getIcons(configXml, getPlatform());
     }
 
     private String getPlatform() {

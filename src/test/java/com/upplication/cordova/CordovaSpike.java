@@ -45,6 +45,17 @@ public class CordovaSpike {
         System.out.println(project);
 
         System.out.println(cordovaProject.plugin().get());
+        System.out.println(cordovaProject.config().getDescription());
+        System.out.println(cordovaProject.config().getName());
+        System.out.println(cordovaProject.config().getVersion());
+        System.out.println(cordovaProject.config().author().getName());
+        System.out.println(cordovaProject.config().author().getEmail());
+        System.out.println(cordovaProject.config().author().getHref());
+        System.out.println(cordovaProject.config().icon().getAll());
+        System.out.println(cordovaProject.config().preferences().getAll());
+        System.out.println(cordovaProject.config().access().getAll());
+        System.out.println(cordovaProject.config().platform(Platform.Android).icon().getAll());
+        System.out.println(cordovaProject.config().platform(Platform.Android).splash().getAll());
     }
 
 }

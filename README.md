@@ -77,6 +77,12 @@ And the best: Customize Cordova
 // basic info
 cordova.config().setName();
 cordova.config().setVersion(1,0,0);
+// if you want custom version for app
+cordova.config().setVersion(Version.create()
+    .version("1.0.0")
+    .iosCfBundleVersion("3.3.3")
+    .androidVersionCode(7));
+
 cordova.config().setDescription("description");
 // author
 cordova.config().author().setEmail("adad");
@@ -102,13 +108,29 @@ cordova.config().platform(Platform.IOs).splash().add(Splash.create().src("dest/s
 Read data for the current project
 
 ```java
-cordova.getConfig().getName();
-cordova.getConfig().getVersion();
-cordova.getConfig().getDescription();
+String name = cordova.config().getName();
+String version = cordova.config().getVersion();
+String description = cordova.config().getDescription();
 
-cordova.getConfig().getAuthor();
-cordova.getConfig().getAuthor().getEmail();
-cordova.getConfig().getAuthor().getHref();
-cordova.getConfig().getAuthor().getName();
+String email = cordova.config().author().getEmail();
+String href = cordova.config().author().getHref();
+String name = cordova.config().author().getName();
+
+List<Icon> icons = cordova.config().icon().getAll();
+List<Access> access = cordova.config().access().getAll();
+List<Preferences> preferences = cordova.config().preferences().getAll();
+List<Icon> icons = cordova.config().platform(Platform.Android).icon().getAll();
+List<Splash> splash = cordova.config().platform(Platform.IOs).splash().getAll();
+
+// I want to add a new icon in the recently changed config.xml
+
+File file = cordova.getProject();
+Path dest = file.toPath().resolve(icon.get(0).getSrc());
+Files.copy(src, dest);
+
+// or if you are already changing your config.xml
+Icon icon = Icon.create().src("src/img").height(100).width(100);
+cordova.config().icon().add(icon);
+Files.copy(src, cordova.getProject().toPath().resolve(icon.getSrc()));
 ```
 
