@@ -17,7 +17,7 @@ public class CordovaCLI {
     }
 
     /**
-     * create a Cordova project with default reverse domain style identifer
+     * Create a Cordova project with default reverse domain style identifer
      * 'io.cordova.hellocordova' and a default name 'HelloCordova'
      * @param path File, empty directory that already exists
      * @return CordovaProject
@@ -27,7 +27,7 @@ public class CordovaCLI {
     }
 
     /**
-     * create a Cordova project with default name 'HelloCordova'
+     * Create a Cordova project with default name 'HelloCordova'
      * @param path File, empty directory that already exists
      * @param reverseDomainStyleIdentifier String, if null its use: 'io.cordova.hellocordova'
      * @return CordovaProject
@@ -37,7 +37,7 @@ public class CordovaCLI {
     }
 
     /**
-     * create a Cordova project
+     * Create a Cordova project
      * @param path File, empty directory that already exists
      * @param reverseDomainStyleIdentifier String, if null its use: 'io.cordova.hellocordova'
      * @param displayName String, if null its use 'HelloCordova'
@@ -59,5 +59,13 @@ public class CordovaCLI {
         new CordovaCommand(folderParent, environment).exec(commands.toArray(new String[0]));
 
         return new CordovaProject(path, environment);
+    }
+
+    /**
+     * Print the version of the cordova
+     * @return String
+     */
+    public String getVersion() {
+        return new CordovaCommand(environment).exec("--version");
     }
 }

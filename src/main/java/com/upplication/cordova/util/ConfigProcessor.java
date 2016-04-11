@@ -65,6 +65,13 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the version of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @return Version never null
+     * @throws IOException
+     */
     public Version getVersion(Path configFile) throws IOException {
         Document document = openConfig(configFile);
 
@@ -77,6 +84,13 @@ public class ConfigProcessor {
                 .androidVersionCode(getInteger(widget.getAttribute("android-versionCode")));
     }
 
+    /**
+     * Sets the name of the application in the config.xml file
+     *
+     * @param configFile    Config file path
+     * @param name          String, mandatory not null
+     * @throws IOException
+     */
     public void setName(Path configFile, String name) throws IOException {
         Document document = openConfig(configFile);
 
@@ -87,6 +101,13 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the name of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @return the name never null
+     * @throws IOException
+     */
     public String getName(Path configFile) throws IOException {
         Document document = openConfig(configFile);
 
@@ -95,6 +116,13 @@ public class ConfigProcessor {
         return nameTag.getTextContent();
     }
 
+    /**
+     * Sets the description of the application in the config.xml file
+     *
+     * @param configFile    Config file path
+     * @param description   String, mandatory not null
+     * @throws IOException
+     */
     public void setDescription(Path configFile, String description) throws IOException {
         Document document = openConfig(configFile);
 
@@ -105,6 +133,13 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the description of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @return the description never null
+     * @throws IOException
+     */
     public String getDescription(Path configFile) throws IOException {
         Document document = openConfig(configFile);
 
@@ -113,6 +148,13 @@ public class ConfigProcessor {
         return descriptionTag.getTextContent();
     }
 
+    /**
+     * Sets the author of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @param authorName String, the author name to set
+     * @throws IOException
+     */
     public void setAuthorName(Path configFile, String authorName) throws IOException {
         Document document = openConfig(configFile);
 
@@ -123,6 +165,13 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the author name of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @return the author name as String never null
+     * @throws IOException
+     */
     public String getAuthorName(Path configFile) throws IOException {
         Document document = openConfig(configFile);
 
@@ -131,6 +180,13 @@ public class ConfigProcessor {
         return nameTag.getTextContent();
     }
 
+    /**
+     * Sets the author email of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @param authorEmail String the author email
+     * @throws IOException
+     */
     public void setAuthorEmail(Path configFile, String authorEmail) throws IOException {
         Document document = openConfig(configFile);
 
@@ -141,6 +197,13 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the author email of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @return the author email as String never null
+     * @throws IOException
+     */
     public String getAuthorEmail(Path configFile) throws IOException {
         Document document = openConfig(configFile);
 
@@ -149,6 +212,13 @@ public class ConfigProcessor {
         return nameTag.getAttribute(authorEmailAttrName);
     }
 
+    /**
+     * Sets the author href of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @param authorHref String the author href
+     * @throws IOException
+     */
     public void setAuthorHref(Path configFile, String authorHref) throws IOException {
         Document document = openConfig(configFile);
 
@@ -159,6 +229,13 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the author href of the application in the config.xml file
+     *
+     * @param configFile Config file path
+     * @return the author href as String never null
+     * @throws IOException
+     */
     public String getAuthorHref(Path configFile) throws IOException {
         Document document = openConfig(configFile);
 
@@ -167,6 +244,15 @@ public class ConfigProcessor {
         return nameTag.getAttribute(authorHrefAttrName);
     }
 
+    /**
+     * Add a new access element in the config.xml
+     *
+     * @param configFile Path Config file
+     * @param accessOrigin String access origin to allow
+     * @param launchExternal yes or no to allow or not the launch external of the url
+     * @param subdomains String subdomains allowed
+     * @throws IOException
+     */
     public void addAccess(Path configFile, String accessOrigin, String launchExternal, String subdomains) throws IOException {
 
         Document document = openConfig(configFile);
@@ -188,13 +274,20 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the list of access allowed in the config.xml
+     *
+     * @param configFile Path config.xml file
+     * @return List Access never null
+     * @throws IOException
+     */
     public List<Access> getAccess(Path configFile) throws IOException {
 
         Document document = openConfig(configFile);
 
         Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
 
-       List<Access> result = new ArrayList<>();
+        List<Access> result = new ArrayList<>();
 
         NodeList nodeList = widget.getElementsByTagName(accessNodeName);
 
@@ -211,23 +304,19 @@ public class ConfigProcessor {
         return result;
     }
 
+    /**
+     * Add a new preference element in the concrete platform with a name and a value attrs
+     *
+     * @param configFile Path config.xml file
+     * @param platform String platform: ios, android ...
+     * @param name String attr name
+     * @param value String attr value
+     * @throws IOException
+     */
     public void addPreference(Path configFile, String platform, String name, String value) throws IOException {
         Document document = openConfig(configFile);
 
-        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
-        Element parent = widget;
-
-        if (platform != null) {
-            Node node = findNode(document, "platform", "name", platform);
-            if (node == null) {
-                // create platform
-                Element platformElement = document.createElement("platform");
-                platformElement.setAttribute("name", platform);
-                node = widget.appendChild(platformElement);
-            }
-
-            parent = (Element) node;
-        }
+        Element parent = getPlatformElement(platform, document);
 
         Element accessElement = document.createElement(preferenceNodeName);
         accessElement.setAttribute("name", name);
@@ -238,22 +327,23 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the list of preferences allowed in the config.xml for a concrete platform
+     *
+     * @param configFile Path config.xml file
+     * @param platform String platform to find
+     * @return List Preference never null
+     * @throws IOException
+     */
     public List<Preference> getPreferences(Path configFile, String platform) throws IOException {
-        Document document = openConfig(configFile);
-
-        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
-        Element parent = widget;
-
         List<Preference> result = new ArrayList<>();
+        Document document = openConfig(configFile);
+        Element parent = getPlatformElement(platform, document);
 
-        if (platform != null) {
-            Node node = findNode(document, "platform", "name", platform);
-            if (node == null) {
-                return result;
-            }
-
-            parent = (Element) node;
+        if (parent == null) {
+            return result;
         }
+
 
         NodeList nodeList = parent.getElementsByTagName(preferenceNodeName);
 
@@ -271,23 +361,21 @@ public class ConfigProcessor {
         return result;
     }
 
+    /**
+     * Add a new icon element in the concrete platform with a src, width, height and a density
+     *
+     * @param configFile Path config.xml file
+     * @param platform String platform: ios, android ...
+     * @param src String the icon relative path
+     * @param width Integer, optional the width in pixels
+     * @param height Integer, optional the width in pixels
+     * @param density String, optional the density
+     * @throws IOException
+     */
     public void addIcon(Path configFile, String platform, String src, Integer width, Integer height, String density) throws IOException {
         Document document = openConfig(configFile);
 
-        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
-        Element parent = widget;
-
-        if (platform != null) {
-            Node node = findNode(document, "platform", "name", platform);
-            if (node == null) {
-                // create platform
-                Element platformElement = document.createElement("platform");
-                platformElement.setAttribute("name", platform);
-                node = widget.appendChild(platformElement);
-            }
-
-            parent = (Element) node;
-        }
+        Element parent = getPlatformElement(platform, document);
 
         Element iconElement = document.createElement("icon");
         iconElement.setAttribute("src", src);
@@ -303,21 +391,22 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the list of icons added in the config.xml for a concrete platform
+     *
+     * @param configFile Path the config.xml file
+     * @param platform String platform to search: ios, android...
+     * @return List Icon never null
+     * @throws IOException
+     */
     public List<Icon> getIcons(Path configFile, String platform) throws IOException {
-        Document document = openConfig(configFile);
-
-        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
-        Element parent = widget;
-
         List<Icon> result = new ArrayList<>();
 
-        if (platform != null) {
-            Node node = findNode(document, "platform", "name", platform);
-            if (node == null) {
-                return result;
-            }
+        Document document = openConfig(configFile);
+        Element parent = getPlatformElement(platform, document);
 
-            parent = (Element) node;
+        if (parent == null) {
+            return result;
         }
 
         NodeList nodeList = parent.getElementsByTagName("icon");
@@ -338,23 +427,21 @@ public class ConfigProcessor {
         return result;
     }
 
+    /**
+     * Add a new Splash element in the concrete platform with a src, widht, height and density
+     *
+     * @param configFile Path config.xml file
+     * @param platform String platform: ios, android ...
+     * @param src String the icon relative path
+     * @param width Integer, optional the width in pixels
+     * @param height Integer, optional the width in pixels
+     * @param density String, optional the density
+     * @throws IOException
+     */
     public void addSplash(Path configFile, String platform, String src, Integer width, Integer height, String density) throws IOException {
         Document document = openConfig(configFile);
 
-        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
-        Element parent = widget;
-
-        if (platform != null) {
-            Node node = findNode(document, "platform", "name", platform);
-            if (node == null) {
-                // create platform
-                Element platformElement = document.createElement("platform");
-                platformElement.setAttribute("name", platform);
-                node = widget.appendChild(platformElement);
-            }
-
-            parent = (Element) node;
-        }
+        Element parent = getPlatformElement(platform, document);
 
         Element iconElement = document.createElement("splash");
         iconElement.setAttribute("src", src);
@@ -370,6 +457,14 @@ public class ConfigProcessor {
         saveConfig(configFile, document);
     }
 
+    /**
+     * Get the list of splash element in the config.xml for a concrete platform
+     *
+     * @param configFile Path config.xml file
+     * @param platform String platform
+     * @return List Splash never null
+     * @throws IOException
+     */
     public List<Splash> getSplashs(Path configFile, String platform) throws IOException {
         Document document = openConfig(configFile);
 
@@ -444,6 +539,15 @@ public class ConfigProcessor {
         }
     }
 
+    /**
+     * Try to find a node in the document with the tag name and with a attribute like the attrValue
+     *
+     * @param document Document to search in it
+     * @param tagName String tag name to find
+     * @param attrName String the attribute name
+     * @param attrValue String the attribute value to check against
+     * @return Node or null
+     */
     private Node findNode(Document document, String tagName, String attrName, String attrValue) {
         NodeList nodeList = document.getElementsByTagName(tagName);
         for (int i = 0; i < nodeList.getLength(); i++){
@@ -458,6 +562,13 @@ public class ConfigProcessor {
         return null;
     }
 
+    /**
+     * Transform a String into number
+     *
+     * @param number String
+     * @return Integer or null if the String is null or empty
+     * @throws NumberFormatException if its a invalid string
+     */
     private Integer getInteger(String number){
         if (number == null || number.isEmpty())
             return null;
@@ -465,6 +576,15 @@ public class ConfigProcessor {
             return new Integer(number);
     }
 
+    /**
+     * Transform a String to boolean.
+     * yes to true
+     * no to false
+     *
+     * @param affirmative String
+     * @return true or false or null if the string is empty or null
+     * @throws IllegalStateException if the string is unknown
+     */
     private Boolean getBoolean(String affirmative){
         if (affirmative == null || affirmative.isEmpty())
             return null;
@@ -472,8 +592,31 @@ public class ConfigProcessor {
             return true;
         else if (affirmative.equalsIgnoreCase("no"))
             return false;
-        else throw new IllegalStateException("Unknown resulto to boolean: " + affirmative);
+        else throw new IllegalStateException("Unknown result to boolean: " + affirmative);
     }
 
+    /**
+     * Try to find the platform node of the document
+     *
+     * @param platform String platform for ios, android....
+     * @param document Document to search
+     * @return Element or null if not exists
+     */
+    private Element getPlatformElement(String platform, Document document) {
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+        Element parent = widget;
 
+        if (platform != null) {
+            Node node = findNode(document, "platform", "name", platform);
+            if (node == null) {
+                // create platform
+                Element platformElement = document.createElement("platform");
+                platformElement.setAttribute("name", platform);
+                node = widget.appendChild(platformElement);
+            }
+
+            parent = (Element) node;
+        }
+        return parent;
+    }
 }

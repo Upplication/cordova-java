@@ -7,6 +7,8 @@ Cordova Java Client to automate tasks
 ```java
 // create a new cordova instance ready to use
 Cordova cordova = new Cordova("path to node", "path to cordova");
+// or if its cordova already on the path
+Cordova cordova = new Cordova();
 ```
 
 ```java

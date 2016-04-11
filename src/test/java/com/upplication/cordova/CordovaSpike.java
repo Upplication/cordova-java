@@ -9,11 +9,13 @@ import java.nio.file.Path;
 public class CordovaSpike {
 
     @Test
-    public void test() throws IOException {
+    public void testAndroid() throws IOException {
 
         System.out.println(System.getenv());
 
         CordovaCLI cordovaCLI = new Cordova("/usr/local/bin/node", "/usr/local/bin/cordova").getCLI();
+
+        System.out.println("version: " + cordovaCLI.getVersion());
 
         Path project = Files.createTempDirectory("cordova-temp");
         CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
@@ -21,8 +23,8 @@ public class CordovaSpike {
         System.out.println(cordovaProject.plugin().get());
        // cordovaProject.platform().add(Platform.Android);
 
-        cordovaProject.plugin().add("org.apache.cordova.statusbar");
-        cordovaProject.plugin().add("org.apache.cordova.device");
+        cordovaProject.plugin().add("cordova-plugin-statusbar");
+        cordovaProject.plugin().add("cordova-plugin-device");
 
 
         cordovaProject.config().author().setEmail("arnaix@gmail.com");
@@ -58,6 +60,16 @@ public class CordovaSpike {
         System.out.println(cordovaProject.config().platform(Platform.Android).icon().getAll());
         System.out.println(cordovaProject.config().platform(Platform.Android).splash().getAll());
         System.out.println(cordovaProject.config().platform(Platform.Android).preference().getAll());
+    }
+
+    @Test
+    public void testVersion() throws IOException {
+
+        System.out.println(System.getenv());
+
+        CordovaCLI cordovaCLI = new Cordova().getCLI();
+
+        System.out.println("version: " + cordovaCLI.getVersion());
     }
 
 }

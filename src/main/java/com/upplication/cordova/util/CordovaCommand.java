@@ -26,8 +26,12 @@ public class CordovaCommand {
     public String exec(String ... command) {
         try {
             List<String> commands = new ArrayList<>();
-            commands.add(environment.getNodePath());
-            commands.add(environment.getCordovaPath());
+            if (environment != null) {
+                commands.add(environment.getNodePath());
+                commands.add(environment.getCordovaPath());
+            } else {
+                commands.add("cordova");
+            }
             commands.addAll(Arrays.asList(command));
 
             ProcessBuilder processBuilder = new ProcessBuilder(commands)

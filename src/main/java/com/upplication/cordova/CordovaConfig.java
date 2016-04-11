@@ -20,6 +20,7 @@ public class CordovaConfig {
     public CordovaConfig(File project){
         this.project = project;
         // TODO: https://keyholesoftware.com/2014/02/17/dependency-injection-options-for-java/
+        // TODO: http://stackoverflow.com/questions/22184736/dependency-injection-using-guice-for-a-client-sdk-library-design-pattern
         this.configProcessor = new ConfigProcessor();
         this.accessConfig = new AccessConfig(getConfigXml(), configProcessor);
         this.preferencesConfig = new PreferencesConfig(getConfigXml(), configProcessor, null);

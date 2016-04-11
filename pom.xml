@@ -21,6 +21,13 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.marschall</groupId>
+            <artifactId>memoryfilesystem</artifactId>
+            <version>0.8.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
