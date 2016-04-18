@@ -1,6 +1,7 @@
 sudo: required
 os:
   - osx
+env: JAVA_HOME=$(/usr/libexec/java_home)
 language: java
 before_install:
 - npm install -g cordova
