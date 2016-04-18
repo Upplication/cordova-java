@@ -3,6 +3,9 @@ package com.upplication.cordova;
 import com.upplication.cordova.util.Environment;
 import java.io.File;
 
+/**
+ * Cordova builder
+ */
 public class Cordova {
 
     private Environment environment;
