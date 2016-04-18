@@ -1,27 +1,78 @@
 package com.upplication.cordova;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 
-public class CordovaSpike {
+public class CordovaIT {
+
+    private CordovaCLI cordovaCLI;
+
+    @Before
+    public void setup() throws IOException {
+        Properties props = new Properties();
+
+        try (InputStream streamResources = this.getClass().getResourceAsStream("/cordova.properties")){
+            if (streamResources != null) {
+                props.load(streamResources);
+            }
+        }
+
+        String nodePath = props.getProperty("node_path");
+        String cordovaPath = props.getProperty("cordova_path");
+        if (nodePath != null && !nodePath.isEmpty() &&
+                cordovaPath != null && !cordovaPath.isEmpty()) {
+            cordovaCLI = new Cordova(nodePath, cordovaPath).getCLI();
+        } else {
+            cordovaCLI = new Cordova().getCLI();
+        }
+    }
+
+    //
+    // TODO: spike, change to integration tests with assert verify etc...
+    //
 
     @Test
-    public void testAndroid() throws IOException {
-
+    public void version() throws IOException {
         System.out.println(System.getenv());
-
-        CordovaCLI cordovaCLI = new Cordova("/usr/local/bin/node", "/usr/local/bin/cordova").getCLI();
-
         System.out.println("version: " + cordovaCLI.getVersion());
+    }
 
+    @Test
+    public void android() throws IOException {
+        Path project = Files.createTempDirectory("cordova-temp");
+        CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
+
+        cordovaProject.platform().add(Platform.Android);
+        cordovaProject.prepare();
+        cordovaProject.compile();
+    }
+
+    @Test
+    public void iOS() throws IOException {
         Path project = Files.createTempDirectory("cordova-temp");
         CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
 
         System.out.println(cordovaProject.plugin().get());
-       // cordovaProject.platform().add(Platform.Android);
+        cordovaProject.platform().add(Platform.IOs);
+        cordovaProject.prepare();
+        cordovaProject.compile();
+    }
+
+    @Test
+    public void config() throws IOException {
+        Path project = Files.createTempDirectory("cordova-temp");
+        CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
+
+        System.out.println(cordovaProject.plugin().get());
+        cordovaProject.platform().add(Platform.Android);
+        cordovaProject.prepare();
+        cordovaProject.compile();
 
         cordovaProject.plugin().add("cordova-plugin-statusbar");
         cordovaProject.plugin().add("cordova-plugin-device");
@@ -41,9 +92,6 @@ public class CordovaSpike {
         cordovaProject.config().platform(Platform.Android).icon().add(Icon.create().src("src/hola.png").width(100).height(300));
 
         cordovaProject.config().platform(Platform.Android).preference().add("android-pref", "pref");
-//        cordovaProject.prepare(Platform.Anxdroid);
-//        cordovaProject.compile();
-//        cordovaProject.build();
 
         System.out.println(project);
 
@@ -61,15 +109,4 @@ public class CordovaSpike {
         System.out.println(cordovaProject.config().platform(Platform.Android).splash().getAll());
         System.out.println(cordovaProject.config().platform(Platform.Android).preference().getAll());
     }
-
-    @Test
-    public void testVersion() throws IOException {
-
-        System.out.println(System.getenv());
-
-        CordovaCLI cordovaCLI = new Cordova().getCLI();
-
-        System.out.println("version: " + cordovaCLI.getVersion());
-    }
-
 }

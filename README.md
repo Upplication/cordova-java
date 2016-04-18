@@ -1,6 +1,55 @@
 # Cordova Java API
 
-Cordova Java Client to automate tasks
+Cordova Java Client to automate tasks.
+
+
+[![Build Status](https://travis-ci.org/Upplication/cordova-java.svg?branch=master)](https://travis-ci.org/Upplication/cordova-java/builds) [![Coverage Status](https://coveralls.io/repos/Upplication/cordova-java/badge.png?branch=master)](https://coveralls.io/r/Upplication/cordova-java?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.upplication/cordova-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.upplication/cordova-java)
+
+## Getting started
+
+### Download from Maven Central
+
+TODO
+
+```XML
+<dependency>
+	<groupId>com.upplication</groupId>
+	<artifactId>cordova-java</artifactId>
+	<version>1.0.0</version>
+</dependency>
+```
+
+## How to contribute
+
+Clone the github repository:
+
+```java
+git clone https://github.com/Upplication/cordova.java.git
+```
+
+To run the tests:
+
+First, you must copy the file `src/test/resources/cordova-sample.properties` and paste in the same directory with the name cordova.properties. In your copy you must edit all the keys:
+
+```
+node_path = your node path or empty if you have added to your user PATH
+cordova_path = your cordova path or null if you have added to your user PATH
+```
+
+Thats all, now you can run the test with the command: `mvn test` or/and `mvn test -Pintegration-tests`
+
+## Features:
+
+* Cordova Command Line Interface with a nice dsl API
+* Cordova Command Line Interface for new projects and existing projects
+* API to customize the config.xml with all the options and platform specific configurations
+
+## Roadmap:
+
+* Tests and Integrations test with Travis and Coveralls
+* Full config.xml API implementation
+* Easy version naming: cordova-java 6.1.1 works for cordova 6.1.1
+
 
 ## Examples Usages
 
@@ -81,7 +130,7 @@ And the best: Customize Cordova
 
 ```java
 // basic info
-cordovaProject.config().setName();
+cordovaProject.config().setName("name");
 cordovaProject.config().setVersion(1,0,0);
 // if you want custom version for app
 cordovaProject.config().setVersion(Version.create()
@@ -100,6 +149,9 @@ cordovaProject.config().access().add("*");
 cordovaProject.config().access().add("*", "yes");
 cordovaProject.config().access().add(Access.create().origin("*").value("disable").subdomains(true));
 cordovaProject.config().preferences().add("name", "value");
+// allow navigation
+cordovaProject.config().allowNavigation().add("*");
+cordovaProject.config().allowNavigation().add("http://*");
 // icon
 cordovaProject.config().icon().add("src/img/icon.png");
 cordovaProject.config().icon().add(Icon.create().src("src/img").height(100).width(100).density("zsdad"));
@@ -126,9 +178,11 @@ String name = cordovaProject.config().author().getName();
 
 List<Icon> icons = cordovaProject.config().icon().getAll();
 List<Access> access = cordovaProject.config().access().getAll();
+List<AllowNavigation> = cordovaProject.config().allowNavigation().getAll();
 List<Preferences> preferences = cordovaProject.config().preferences().getAll();
 List<Icon> icons = cordovaProject.config().platform(Platform.Android).icon().getAll();
 List<Splash> splash = cordovaProject.config().platform(Platform.IOs).splash().getAll();
+
 
 // I want to add a new icon in the recently changed config.xml
 
@@ -141,4 +195,8 @@ Icon icon = Icon.create().src("src/img").height(100).width(100);
 cordovaProject.config().icon().add(icon);
 Files.copy(src, cordovaProject.getProject().toPath().resolve(icon.getSrc()));
 ```
+
+## LICENSE:
+
+Cordova Java is released under the MIT License.
 

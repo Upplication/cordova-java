@@ -12,6 +12,7 @@ public class CordovaConfig {
     private File project;
     private ConfigProcessor configProcessor;
     private AccessConfig accessConfig;
+    private AllowNavigationConfig allowNavigationConfig;
     private PreferencesConfig preferencesConfig;
     private AuthorConfig authorConfig;
 
@@ -23,6 +24,7 @@ public class CordovaConfig {
         // TODO: http://stackoverflow.com/questions/22184736/dependency-injection-using-guice-for-a-client-sdk-library-design-pattern
         this.configProcessor = new ConfigProcessor();
         this.accessConfig = new AccessConfig(getConfigXml(), configProcessor);
+        this.allowNavigationConfig = new AllowNavigationConfig(getConfigXml(), configProcessor);
         this.preferencesConfig = new PreferencesConfig(getConfigXml(), configProcessor, null);
         this.authorConfig = new AuthorConfig(getConfigXml(), configProcessor);
         this.iconConfigBase = new IconConfig(getConfigXml(), configProcessor, null);
@@ -63,6 +65,10 @@ public class CordovaConfig {
 
     public AccessConfig access() {
         return accessConfig;
+    }
+
+    public AllowNavigationConfig allowNavigation() {
+        return allowNavigationConfig;
     }
 
     public PreferencesConfig preferences() {

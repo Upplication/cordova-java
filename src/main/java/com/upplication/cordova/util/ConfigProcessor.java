@@ -34,6 +34,7 @@ public class ConfigProcessor {
     private static final String descriptionNodeName = "description";
     private static final String authorNodeName = "author";
     private static final String accessNodeName = "access";
+    private static final String allowNavigationNode = "allow-navigation";
     private static final String preferenceNodeName = "preference";
 
     private static final String authorEmailAttrName = "email";
@@ -45,8 +46,8 @@ public class ConfigProcessor {
      *
      * @param configFile         Config file path
      * @param version            Version
-     * @param iosCfBundleVersion ios Version
-     * @param androidVersionCode android    Version
+     * @param iosCfBundleVersion ios Version, String, optional can be null
+     * @param androidVersionCode android Version, Integer, optional can be null
      * @throws IOException
      */
     public void setVersion(Path configFile, String version, String iosCfBundleVersion, Integer androidVersionCode) throws IOException {
@@ -299,6 +300,55 @@ public class ConfigProcessor {
                     .subdomains(getBoolean(element.getAttribute("subdomains")))
                     .launchExternal(getBoolean(element.getAttribute("launch-external")));
             result.add(access);
+        }
+
+        return result;
+    }
+
+    /**
+     * Add a new allow-element element in the config.xml
+     *
+     * @param configFile Path Config file
+     * @param href String href to allow
+     * @throws IOException
+     */
+    public void addAllowNavigation(Path configFile, String href) throws IOException {
+
+        Document document = openConfig(configFile);
+
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+
+        Element allowElement = document.createElement(allowNavigationNode);
+        allowElement.setAttribute("href", href);
+
+        widget.appendChild(allowElement);
+
+        saveConfig(configFile, document);
+    }
+
+    /**
+     * Get the list of allow-navigation allowed in the config.xml
+     *
+     * @param configFile Path config.xml file
+     * @return List AllowNavigation never null
+     * @throws IOException
+     */
+    public List<AllowNavigation> getAllowNavigation(Path configFile) throws IOException {
+
+        Document document = openConfig(configFile);
+
+        Element widget = (Element) document.getElementsByTagName(widgetNodeName).item(0);
+
+        List<AllowNavigation> result = new ArrayList<>();
+
+        NodeList nodeList = widget.getElementsByTagName(allowNavigationNode);
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+            Element element = (Element)node;
+            AllowNavigation allowNavigation = AllowNavigation.create()
+                    .href(element.getAttribute("href"));
+            result.add(allowNavigation);
         }
 
         return result;

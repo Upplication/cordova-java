@@ -4,7 +4,6 @@ import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -199,6 +198,26 @@ public class ConfigProcessorTest {
         String descriptionNodeContent = author.item(0).getTextContent();
         assertNotNull(descriptionNodeContent);
         assertEquals(description, descriptionNodeContent);
+    }
+
+    @Test
+    public void when_set_allowNavigation_then_allowNavigation_node_is_added() throws Exception {
+
+        String href = "*";
+        Path configFile = createFileFromDocument(createConfigXmlDocument());
+
+        processor.addAllowNavigation(configFile, href);
+
+        // assert
+
+        Document resultFile = xmlToDocument(configFile);
+        NodeList allowNavigationNode = resultFile.getElementsByTagName("allow-navigation");
+        assertNotNull(allowNavigationNode);
+        assertEquals(1, allowNavigationNode.getLength());
+
+        String hrefAttributeValue = allowNavigationNode.item(0).getAttributes().getNamedItem("href").getTextContent();
+        assertNotNull(hrefAttributeValue);
+        assertEquals(href, hrefAttributeValue);
     }
 
     // helpers

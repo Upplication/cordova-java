@@ -1,0 +1,12 @@
+sudo: required
+os:
+  - osx
+language: java
+jdk:
+- openjdk7
+- oraclejdk7
+before_install:
+- npm install -g cordova
+script: mvn clean install
+after_success:
+- mvn cobertura:cobertura coveralls:report
