@@ -34,7 +34,7 @@ public class CordovaIT {
     }
 
     //
-    // TODO: spike, change to integration tests with assert verify etc...
+    // TODO: spike, change to a real integration tests with assert verify etc...
     //
 
     @Test
