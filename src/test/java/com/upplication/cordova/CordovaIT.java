@@ -9,6 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class CordovaIT {
 
     private CordovaCLI cordovaCLI;
@@ -31,6 +35,8 @@ public class CordovaIT {
         } else {
             cordovaCLI = new Cordova().getCLI();
         }
+
+        System.out.println(System.getenv());
     }
 
     //
@@ -39,8 +45,9 @@ public class CordovaIT {
 
     @Test
     public void version() throws IOException {
-        System.out.println(System.getenv());
-        System.out.println("version: " + cordovaCLI.getVersion());
+        String version = cordovaCLI.getVersion();
+        assertNotNull(version);
+        assertTrue(version.startsWith("6.1.1"));
     }
 
     @Test
