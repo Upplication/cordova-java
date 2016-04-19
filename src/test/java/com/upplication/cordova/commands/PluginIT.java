@@ -1,0 +1,62 @@
+package com.upplication.cordova.commands;
+
+import com.upplication.cordova.CordovaProject;
+import com.upplication.cordova.Plugin;
+import com.upplication.cordova.junit.CordovaCLIRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class PluginIT {
+    @Rule
+    public CordovaCLIRule cordovaCLIRule = new CordovaCLIRule();
+
+    private CordovaProject cordova;
+
+    @Before
+    public void setUp() throws IOException {
+        cordova = cordovaCLIRule.get().create(Files.createTempDirectory("cordova-path").toFile());
+    }
+
+    @Test
+    public void list_empty_plugins() {
+        List<Plugin> plugins = cordova.plugin().get();
+
+        assertTrue(plugins.isEmpty());
+    }
+
+    @Test
+    public void add_plugin_and_list() {
+        cordova.plugin().add("cordova-plugin-geolocation");
+        List<Plugin> plugins = cordova.plugin().get();
+
+        assertTrue(!plugins.isEmpty());
+        assertTrue(plugins.size() == 1);
+        assertEquals("cordova-plugin-geolocation", plugins.get(0).getFullName());
+        assertEquals("Geolocation", plugins.get(0).getName());
+    }
+
+    @Test
+    public void list_two_plugins() {
+        cordova.plugin().add("cordova-plugin-geolocation");
+        cordova.plugin().add("cordova-plugin-console");
+        List<Plugin> plugins = cordova.plugin().get();
+
+        assertTrue(!plugins.isEmpty());
+        assertTrue(plugins.size() == 2);
+
+        assertEquals("cordova-plugin-console", plugins.get(0).getFullName());
+        assertEquals("Console", plugins.get(0).getName());
+
+        assertEquals("cordova-plugin-geolocation", plugins.get(1).getFullName());
+        assertEquals("Geolocation", plugins.get(1).getName());
+    }
+
+}

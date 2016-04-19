@@ -1,6 +1,8 @@
 package com.upplication.cordova;
 
+import com.upplication.cordova.junit.CordovaCLIRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,28 +17,15 @@ import static org.junit.Assert.assertTrue;
 
 public class CordovaIT {
 
+    @Rule
+    public CordovaCLIRule cordovaCLIRule = new CordovaCLIRule();
+
     private CordovaCLI cordovaCLI;
 
+
     @Before
-    public void setup() throws IOException {
-        Properties props = new Properties();
-
-        try (InputStream streamResources = this.getClass().getResourceAsStream("/cordova.properties")){
-            if (streamResources != null) {
-                props.load(streamResources);
-            }
-        }
-
-        String nodePath = props.getProperty("node_path");
-        String cordovaPath = props.getProperty("cordova_path");
-        if (nodePath != null && !nodePath.isEmpty() &&
-                cordovaPath != null && !cordovaPath.isEmpty()) {
-            cordovaCLI = new Cordova(nodePath, cordovaPath).getCLI();
-        } else {
-            cordovaCLI = new Cordova().getCLI();
-        }
-
-        System.out.println(System.getenv());
+    public void setUp() {
+        cordovaCLI = cordovaCLIRule.get();
     }
 
     //
@@ -47,7 +36,7 @@ public class CordovaIT {
     public void version() throws IOException {
         String version = cordovaCLI.getVersion();
         assertNotNull(version);
-        assertTrue(version.startsWith("6.1.1"));
+        assertEquals("6.1.1", version);
     }
 
     @Test
@@ -65,7 +54,6 @@ public class CordovaIT {
         Path project = Files.createTempDirectory("cordova-temp");
         CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
 
-        System.out.println(cordovaProject.plugin().get());
         cordovaProject.platform().add(Platform.IOs);
         cordovaProject.prepare();
         cordovaProject.compile();

@@ -1,5 +1,6 @@
 package com.upplication.cordova.util;
 
+import com.upplication.cordova.exception.CordovaCommandException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,18 +43,35 @@ public class CordovaCommand {
             }
 
             Process process = processBuilder.start();
-            if (process.waitFor() != 0) {
-                String msg = "Cordova command failed.\nWorking Directory: " + project +
-                        ".\nCommands: " + Arrays.toString(command) +
-                        ".\nCaused by: " + getErrorProcess(process) + getProcessOutput(process);
-                logger.error(msg);
-                throw new IllegalStateException(msg);
+            try (InputStream stream = process.getInputStream()){
+                try (StringWriter output = new StringWriter()) {
+                    BufferedReader input = new BufferedReader(new InputStreamReader(stream));
+                    String line;
+                    boolean hasMoreLines = false;
+                    while ((line = input.readLine()) != null) {
+                        if (hasMoreLines) {
+                            output.append("\n");
+                        }
+                        output.append(line);
+                        logger.debug(line);
+                        hasMoreLines = true;
+                    }
+
+                    if (process.waitFor() != 0) {
+                        String msg = "Cordova command failed.\nWorking Directory: " + project +
+                                ".\nCommands: " + Arrays.toString(command) +
+                                ".\nCaused by: " + getErrorProcess(process) + output.toString();
+                        logger.error(msg);
+                        throw new CordovaCommandException(msg);
+                    } else {
+
+                        String result = output.toString();
+                        logger.info("command result: " + result);
+
+                        return result;
+                    }
+                }
             }
-
-            String result = getProcessOutput(process).toString();
-            logger.info(result);
-
-            return result;
         }
         catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
@@ -68,37 +86,17 @@ public class CordovaCommand {
      * @throws IOException
      */
     public StringBuilder getErrorProcess(Process process) throws IOException {
-        return getProcessStream(process.getErrorStream());
-    }
 
-    /**
-     * Retrieves the result of a process
-     *
-     * @param process Process
-     * @return Result
-     * @throws IOException
-     */
-    public StringBuilder getProcessOutput(Process process) throws IOException {
-        return getProcessStream(process.getInputStream());
-    }
-
-    /**
-     * Retrieves a process input stream as string builder
-     *
-     * @param stream Input stream
-     * @return String builder
-     * @throws IOException
-     */
-    private StringBuilder getProcessStream(InputStream stream) throws IOException {
         StringBuilder output = new StringBuilder();
 
-        BufferedReader input = new BufferedReader(new InputStreamReader(stream));
-        String line;
-        while ((line = input.readLine()) != null) {
-            output.append(line);
-            output.append('\n');
-        }
+        try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+            String line;
+            while ((line = input.readLine()) != null) {
+                output.append(line);
+                output.append('\n');
+            }
 
-        return output;
+            return output;
+        }
     }
 }

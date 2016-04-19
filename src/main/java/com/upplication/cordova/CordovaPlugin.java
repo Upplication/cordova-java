@@ -44,7 +44,7 @@ public class CordovaPlugin {
                 String[] pluginDetailed = plugin.split(" ");
 
                 Plugin pluginTO = new Plugin();
-                pluginTO.setName(pluginDetailed[2]);
+                pluginTO.setName(pluginDetailed[2].replace("\"", ""));
                 pluginTO.setVersion(pluginDetailed[1]);
                 pluginTO.setFullName(pluginDetailed[0]);
                 results.add(pluginTO);
