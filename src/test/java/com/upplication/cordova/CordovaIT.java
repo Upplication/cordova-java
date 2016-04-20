@@ -4,21 +4,22 @@ import com.upplication.cordova.junit.CordovaCLIRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class CordovaIT {
 
     @Rule
     public CordovaCLIRule cordovaCLIRule = new CordovaCLIRule();
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     private CordovaCLI cordovaCLI;
 
@@ -41,7 +42,7 @@ public class CordovaIT {
 
     @Test
     public void android() throws IOException {
-        Path project = Files.createTempDirectory("cordova-temp");
+        Path project = folder.newFolder("cordova-temp").toPath();
         CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
 
         cordovaProject.platform().add(Platform.Android);
@@ -51,7 +52,7 @@ public class CordovaIT {
 
     @Test
     public void iOS() throws IOException {
-        Path project = Files.createTempDirectory("cordova-temp");
+        Path project = folder.newFolder("cordova-temp").toPath();
         CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
 
         cordovaProject.platform().add(Platform.IOs);
@@ -61,7 +62,7 @@ public class CordovaIT {
 
     @Test
     public void config() throws IOException {
-        Path project = Files.createTempDirectory("cordova-temp");
+        Path project = folder.newFolder("cordova-temp").toPath();
         CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
 
         System.out.println(cordovaProject.plugin().get());

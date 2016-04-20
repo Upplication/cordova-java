@@ -1,5 +1,9 @@
 package com.upplication.cordova;
 
+/**
+ * icon element of the config.xml
+ * https://cordova.apache.org/docs/en/latest/config_ref/images.html
+ */
 public class Icon {
 
     private String src;

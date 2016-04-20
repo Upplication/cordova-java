@@ -6,9 +6,9 @@ import com.upplication.cordova.junit.CordovaCLIRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -17,12 +17,14 @@ import static org.junit.Assert.assertTrue;
 public class PluginIT {
     @Rule
     public CordovaCLIRule cordovaCLIRule = new CordovaCLIRule();
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     private CordovaProject cordova;
 
     @Before
     public void setUp() throws IOException {
-        cordova = cordovaCLIRule.get().create(Files.createTempDirectory("cordova-path").toFile());
+        cordova = cordovaCLIRule.get().create(folder.newFolder("cordova-path"));
     }
 
     @Test

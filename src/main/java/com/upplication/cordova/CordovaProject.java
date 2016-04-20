@@ -5,6 +5,9 @@ import com.upplication.cordova.util.Environment;
 
 import java.io.File;
 
+/**
+ * A cordova created project
+ */
 public class CordovaProject {
 
     private File project;

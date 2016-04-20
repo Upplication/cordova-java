@@ -5,6 +5,10 @@ import com.upplication.cordova.util.ConfigProcessor;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/**
+ * Customize author in the config.xml
+ * https://cordova.apache.org/docs/en/latest/config_ref/index.html#author
+ */
 public class AuthorConfig {
 
     private Path configXml;

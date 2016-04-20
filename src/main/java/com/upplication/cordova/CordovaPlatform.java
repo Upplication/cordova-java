@@ -3,6 +3,9 @@ package com.upplication.cordova;
 
 import com.upplication.cordova.util.CordovaCommand;
 
+/**
+ * cordova platform commands
+ */
 public class CordovaPlatform {
 
     private CordovaCommand cordovaCommand;

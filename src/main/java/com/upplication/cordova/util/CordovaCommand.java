@@ -5,10 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+/**
+ * Helper to exec cordova command
+ */
 public class CordovaCommand {
 
     private File project;
@@ -25,6 +26,10 @@ public class CordovaCommand {
     }
 
     public String exec(String ... command) {
+        return exec(command, null);
+    }
+
+    public String exec(String[] command, Map<String,String> newEnv) {
         try {
             List<String> commands = new ArrayList<>();
             if (environment != null) {
@@ -38,14 +43,18 @@ public class CordovaCommand {
             ProcessBuilder processBuilder = new ProcessBuilder(commands)
                     .redirectErrorStream(true);
 
+            if (newEnv != null) {
+                Map<String, String> env = processBuilder.environment();
+                env.putAll(newEnv);
+            }
+
             if (project != null) {
                 processBuilder.directory(project);
             }
 
             Process process = processBuilder.start();
-            try (InputStream stream = process.getInputStream()){
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))){
                 try (StringWriter output = new StringWriter()) {
-                    BufferedReader input = new BufferedReader(new InputStreamReader(stream));
                     String line;
                     boolean hasMoreLines = false;
                     while ((line = input.readLine()) != null) {
@@ -59,14 +68,14 @@ public class CordovaCommand {
 
                     if (process.waitFor() != 0) {
                         String msg = "Cordova command failed.\nWorking Directory: " + project +
-                                ".\nCommands: " + Arrays.toString(command) +
+                                ".\nCommands: " + commands +
                                 ".\nCaused by: " + getErrorProcess(process) + output.toString();
                         logger.error(msg);
                         throw new CordovaCommandException(msg);
                     } else {
 
                         String result = output.toString();
-                        logger.info("command result: " + result);
+                        logger.info("Command: " + commands + " with result:\n" + result);
 
                         return result;
                     }

@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * customize splash for the config.xml
+ * cordova-splash-plugin is needed
+ * https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-splashscreen/
+ */
 public class SplashConfig {
 
     private Platform platform;

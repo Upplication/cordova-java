@@ -1,6 +1,9 @@
 package com.upplication.cordova;
 
-
+/**
+ * access element
+ * https://cordova.apache.org/docs/en/latest/config_ref/index.html#access
+ */
 public class Access {
 
     private String origin;

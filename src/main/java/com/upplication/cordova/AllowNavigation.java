@@ -1,6 +1,9 @@
 package com.upplication.cordova;
 
-
+/**
+ * allow navigation element
+ * https://cordova.apache.org/docs/en/latest/config_ref/index.html#allow-navigation
+ */
 public class AllowNavigation {
 
     private String href;

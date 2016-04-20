@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/**
+ * Cordova config.xml API
+ */
 public class CordovaConfig {
 
     private File project;

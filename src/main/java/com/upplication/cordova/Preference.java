@@ -1,5 +1,9 @@
 package com.upplication.cordova;
 
+/**
+ * preference element in the config.xml
+ * https://cordova.apache.org/docs/en/latest/config_ref/index.html#preference
+ */
 public class Preference {
     private String name;
     private String value;

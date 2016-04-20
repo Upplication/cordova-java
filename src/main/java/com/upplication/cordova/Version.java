@@ -1,5 +1,9 @@
 package com.upplication.cordova;
 
+/**
+ * version attr in the config.xml
+ * https://cordova.apache.org/docs/en/latest/config_ref/index.html#widget
+ */
 public class Version {
 
     private String version;

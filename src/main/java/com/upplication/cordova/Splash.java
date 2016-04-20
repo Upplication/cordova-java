@@ -1,5 +1,9 @@
 package com.upplication.cordova;
 
+/**
+ * splash element in the config.xml
+ * https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-splashscreen/index.html
+ */
 public class Splash {
 
     private String src;

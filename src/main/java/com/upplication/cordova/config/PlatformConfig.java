@@ -5,6 +5,10 @@ import com.upplication.cordova.util.ConfigProcessor;
 
 import java.nio.file.Path;
 
+/**
+ * customize platform for the config.xml
+ * https://cordova.apache.org/docs/en/latest/config_ref/index.html#platform
+ */
 public class PlatformConfig {
 
     private ConfigProcessor configProcessor;
