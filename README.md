@@ -3,7 +3,7 @@
 Cordova Java Client to automate tasks.
 
 
-[![Build Status](https://travis-ci.org/Upplication/cordova-java.svg?branch=master)](https://travis-ci.org/Upplication/cordova-java/builds) [![Coverage Status](https://coveralls.io/repos/Upplication/cordova-java/badge.png?branch=master)](https://coveralls.io/r/Upplication/cordova-java?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.upplication/cordova-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.upplication/cordova-java)
+[![Build Status](https://travis-ci.org/Upplication/cordova-java.svg?branch=master)](https://travis-ci.org/Upplication/cordova-java/builds) [![Coverage Status](https://coveralls.io/repos/github/Upplication/cordova-java/badge.svg?branch=master)](https://coveralls.io/github/Upplication/cordova-java?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.upplication/cordova-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.upplication/cordova-java)
 
 ## Getting started
 
