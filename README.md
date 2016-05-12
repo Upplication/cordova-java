@@ -163,6 +163,16 @@ cordovaProject.config().platform(Platform.Android).splash().add(Splash.create().
 cordovaProject.config().platform(Platform.IOs).splash().add(Splash.create().src("dest/splash.png").width(320).height(100));
 // platform preferences
 cordovaProject.config().platform(Platform.Android).preferences().add("name", "value");
+
+//or for better perfomance, do a transaction
+cordovaProject.config(new ConfigTransactionJob() {
+    @Override
+    public void exec(CordovaConfig config) throws IOException {
+        config.setName("hello");
+        config.setVersion(Version.create().version("100"));
+        config.setDescription("description");
+    }
+}
 ```
 
 Read data for the current project

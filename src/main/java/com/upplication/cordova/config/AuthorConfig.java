@@ -1,9 +1,8 @@
 package com.upplication.cordova.config;
 
-import com.upplication.cordova.util.ConfigProcessor;
+import com.upplication.cordova.util.IConfigProcessor;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 /**
  * Customize author in the config.xml
@@ -11,35 +10,33 @@ import java.nio.file.Path;
  */
 public class AuthorConfig {
 
-    private Path configXml;
-    private ConfigProcessor configProcessor;
+    private IConfigProcessor configProcessor;
 
-    public AuthorConfig(Path configXml, ConfigProcessor configProcessor) {
-        this.configXml = configXml;
+    public AuthorConfig(IConfigProcessor configProcessor) {
         this.configProcessor = configProcessor;
     }
 
     public void setName(String name) throws IOException {
-        configProcessor.setAuthorName(configXml, name);
+        configProcessor.setAuthorName(name);
     }
 
     public String getName() throws IOException {
-        return configProcessor.getAuthorName(configXml);
+        return configProcessor.getAuthorName();
     }
 
     public void setHref(String href) throws IOException {
-        configProcessor.setAuthorHref(configXml, href);
+        configProcessor.setAuthorHref(href);
     }
 
     public String getHref() throws IOException {
-        return configProcessor.getAuthorHref(configXml);
+        return configProcessor.getAuthorHref();
     }
 
     public void setEmail(String email) throws IOException {
-        configProcessor.setAuthorEmail(configXml, email);
+        configProcessor.setAuthorEmail(email);
     }
 
     public String getEmail() throws IOException {
-        return configProcessor.getAuthorEmail(configXml);
+        return configProcessor.getAuthorEmail();
     }
 }

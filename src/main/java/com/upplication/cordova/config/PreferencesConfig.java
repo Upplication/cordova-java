@@ -3,6 +3,7 @@ package com.upplication.cordova.config;
 import com.upplication.cordova.Platform;
 import com.upplication.cordova.Preference;
 import com.upplication.cordova.util.ConfigProcessor;
+import com.upplication.cordova.util.IConfigProcessor;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,22 +14,20 @@ import java.util.List;
  */
 public class PreferencesConfig {
 
-    private ConfigProcessor configProcessor;
+    private IConfigProcessor configProcessor;
     private Platform platform;
-    private Path configXml;
 
-    public PreferencesConfig(Path configXml, ConfigProcessor configProcessor, Platform platform){
-        this.configXml = configXml;
+    public PreferencesConfig(IConfigProcessor configProcessor, Platform platform){
         this.configProcessor = configProcessor;
         this.platform = platform;
     }
 
     public void add(String name, String value) throws IOException {
-        configProcessor.addPreference(configXml, getPlatform(), name, value);
+        configProcessor.addPreference(getPlatform(), name, value);
     }
 
     public List<Preference> getAll() throws IOException {
-        return configProcessor.getPreferences(configXml, getPlatform());
+        return configProcessor.getPreferences(getPlatform());
     }
 
     private String getPlatform() {

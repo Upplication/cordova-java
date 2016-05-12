@@ -2,6 +2,7 @@ package com.upplication.cordova.config;
 
 import com.upplication.cordova.AllowNavigation;
 import com.upplication.cordova.util.ConfigProcessor;
+import com.upplication.cordova.util.IConfigProcessor;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,11 +14,9 @@ import java.util.List;
  */
 public class AllowNavigationConfig {
 
-    private ConfigProcessor configProcessor;
-    private Path configXml;
+    private IConfigProcessor configProcessor;
 
-    public AllowNavigationConfig(Path configXml, ConfigProcessor configProcessor) {
-        this.configXml = configXml;
+    public AllowNavigationConfig(IConfigProcessor configProcessor) {
         this.configProcessor = configProcessor;
     }
 
@@ -26,10 +25,10 @@ public class AllowNavigationConfig {
     }
 
     public void add(AllowNavigation allowNavigation) throws IOException {
-        configProcessor.addAllowNavigation(configXml, allowNavigation.getHref());
+        configProcessor.addAllowNavigation(allowNavigation.getHref());
     }
 
     public List<AllowNavigation> getAll() throws IOException {
-        return configProcessor.getAllowNavigation(configXml);
+        return configProcessor.getAllowNavigation();
     }
 }

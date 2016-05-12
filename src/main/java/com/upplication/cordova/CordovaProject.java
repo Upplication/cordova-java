@@ -1,9 +1,11 @@
 package com.upplication.cordova;
 
-import com.upplication.cordova.util.CordovaCommand;
-import com.upplication.cordova.util.Environment;
+import com.upplication.cordova.util.ConfigTransactionJob;
+import com.upplication.cordova.util.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * A cordova created project
@@ -24,7 +26,7 @@ public class CordovaProject {
         this.cordovaCommand = new CordovaCommand(project, environment);
         this.cordovaPlatform = new CordovaPlatform(cordovaCommand);
         this.cordovaPlugin = new CordovaPlugin(cordovaCommand);
-        this.cordovaConfig = new CordovaConfig(this.project);
+        this.cordovaConfig = new CordovaConfig(getConfigXml(), new ConfigProcessor(getConfigXml()));
     }
 
     public void build() {
@@ -71,8 +73,22 @@ public class CordovaProject {
         return cordovaConfig;
     }
 
+    public void config(ConfigTransactionJob config) throws IOException {
+        try (ConfigProcessorTransaction transaction = new ConfigProcessorTransaction(getConfigXml())) {
+            config.exec(new CordovaConfig(getConfigXml(), transaction));
+        }
+    }
+
+    //
+    // TODO: create Project class with the access to the resources as Path
+    //
+
     public File getProject(){
         return project;
+    }
+
+    private Path getConfigXml() {
+        return project.toPath().resolve("config.xml");
     }
 
 

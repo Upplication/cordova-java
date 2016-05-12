@@ -30,11 +30,9 @@ import static org.junit.Assert.assertNotNull;
 public class ConfigProcessorTest {
 
     private FileSystem fs;
-    private ConfigProcessor processor;
 
     @Before
     public void setup() throws IOException {
-        processor = new ConfigProcessor();
         fs = MemoryFileSystemBuilder.newLinux().build(UUID.randomUUID().toString());
     }
 
@@ -45,7 +43,9 @@ public class ConfigProcessorTest {
 
         Path configFile = createFileFromDocument(createConfigXmlDocument());
 
-        processor.setName(configFile, name);
+        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        processor.setName(name);
 
         // assert
 
@@ -65,7 +65,9 @@ public class ConfigProcessorTest {
         String version = "2.0.0";
         Path configFile = createFileFromDocument(createConfigXmlDocument());
 
-        processor.setVersion(configFile, version, null, null);
+        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        processor.setVersion(version, null, null);
 
         // assert
 
@@ -84,8 +86,9 @@ public class ConfigProcessorTest {
 
         String version = "2.0.0";
         Path configFile = createFileFromDocument(createConfigXmlDocument());
+        ConfigProcessor processor = new ConfigProcessor(configFile);
 
-        processor.setVersion(configFile, version, version, null);
+        processor.setVersion(version, version, null);
 
         // assert
 
@@ -105,8 +108,9 @@ public class ConfigProcessorTest {
         String version = "2.0.0";
         Integer versionAndroid = 2;
         Path configFile = createFileFromDocument(createConfigXmlDocument());
+        ConfigProcessor processor = new ConfigProcessor(configFile);
 
-        processor.setVersion(configFile, version, version, versionAndroid);
+        processor.setVersion(version, version, versionAndroid);
 
         // assert
 
@@ -125,8 +129,9 @@ public class ConfigProcessorTest {
 
         String email = "email@email.com";
         Path configFile = createFileFromDocument(createConfigXmlDocument());
+        ConfigProcessor processor = new ConfigProcessor(configFile);
 
-        processor.setAuthorEmail(configFile, email);
+        processor.setAuthorEmail(email);
 
         // assert
 
@@ -145,8 +150,9 @@ public class ConfigProcessorTest {
 
         String authorName = "Upplication Software";
         Path configFile = createFileFromDocument(createConfigXmlDocument());
+        ConfigProcessor processor = new ConfigProcessor(configFile);
 
-        processor.setAuthorName(configFile, authorName);
+        processor.setAuthorName(authorName);
 
         // assert
 
@@ -165,8 +171,9 @@ public class ConfigProcessorTest {
 
         String authorHref = "upplication.com";
         Path configFile = createFileFromDocument(createConfigXmlDocument());
+        ConfigProcessor processor = new ConfigProcessor(configFile);
 
-        processor.setAuthorHref(configFile, authorHref);
+        processor.setAuthorHref(authorHref);
 
         // assert
 
@@ -185,8 +192,9 @@ public class ConfigProcessorTest {
 
         String description = "description";
         Path configFile = createFileFromDocument(createConfigXmlDocument());
+        ConfigProcessor processor = new ConfigProcessor(configFile);
 
-        processor.setDescription(configFile, description);
+        processor.setDescription(description);
 
         // assert
 
@@ -205,8 +213,9 @@ public class ConfigProcessorTest {
 
         String href = "*";
         Path configFile = createFileFromDocument(createConfigXmlDocument());
+        ConfigProcessor processor = new ConfigProcessor(configFile);
 
-        processor.addAllowNavigation(configFile, href);
+        processor.addAllowNavigation(href);
 
         // assert
 

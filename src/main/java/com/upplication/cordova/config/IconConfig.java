@@ -3,6 +3,7 @@ package com.upplication.cordova.config;
 import com.upplication.cordova.Icon;
 import com.upplication.cordova.Platform;
 import com.upplication.cordova.util.ConfigProcessor;
+import com.upplication.cordova.util.IConfigProcessor;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
@@ -21,13 +22,11 @@ import java.util.List;
 public class IconConfig {
 
     private Platform platform;
-    private ConfigProcessor configProcessor;
-    private Path configXml;
+    private IConfigProcessor configProcessor;
 
-    public IconConfig(Path configXml, ConfigProcessor configProcessor, Platform platform) {
+    public IconConfig(IConfigProcessor configProcessor, Platform platform) {
         this.platform = platform;
         this.configProcessor = configProcessor;
-        this.configXml = configXml;
     }
 
     public void add(String src) throws IOException {
@@ -35,11 +34,11 @@ public class IconConfig {
     }
 
     public void add(Icon icon) throws IOException {
-        configProcessor.addIcon(configXml, getPlatform(), icon.getSrc(), icon.getWidth(), icon.getHeight(), icon.getDensity());
+        configProcessor.addIcon(getPlatform(), icon.getSrc(), icon.getWidth(), icon.getHeight(), icon.getDensity());
     }
 
     public List<Icon> getAll() throws IOException {
-        return configProcessor.getIcons(configXml, getPlatform());
+        return configProcessor.getIcons(getPlatform());
     }
 
     private String getPlatform() {

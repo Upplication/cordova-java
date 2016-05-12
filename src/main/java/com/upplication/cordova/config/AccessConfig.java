@@ -2,6 +2,7 @@ package com.upplication.cordova.config;
 
 import com.upplication.cordova.Access;
 import com.upplication.cordova.util.ConfigProcessor;
+import com.upplication.cordova.util.IConfigProcessor;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -15,11 +16,9 @@ import java.util.List;
  */
 public class AccessConfig {
 
-    private ConfigProcessor configProcessor;
-    private Path configXml;
+    private IConfigProcessor configProcessor;
 
-    public AccessConfig (Path configXml, ConfigProcessor configProcessor) {
-        this.configXml = configXml;
+    public AccessConfig (IConfigProcessor configProcessor) {
         this.configProcessor = configProcessor;
     }
 
@@ -32,11 +31,11 @@ public class AccessConfig {
     }
 
     public void add(Access access) throws IOException {
-        configProcessor.addAccess(configXml, access.getOrigin(),
+        configProcessor.addAccess(access.getOrigin(),
                 access.getLaunchExternal(), access.getSubdomains());
     }
 
     public List<Access> getAll() throws IOException {
-        return configProcessor.getAccess(configXml);
+        return configProcessor.getAccess();
     }
 }

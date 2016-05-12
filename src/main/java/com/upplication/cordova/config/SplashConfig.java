@@ -3,6 +3,7 @@ package com.upplication.cordova.config;
 import com.upplication.cordova.Platform;
 import com.upplication.cordova.Splash;
 import com.upplication.cordova.util.ConfigProcessor;
+import com.upplication.cordova.util.IConfigProcessor;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,21 +17,19 @@ import java.util.List;
 public class SplashConfig {
 
     private Platform platform;
-    private ConfigProcessor configProcessor;
-    private Path configXml;
+    private IConfigProcessor configProcessor;
 
-    public SplashConfig(Path configXml, ConfigProcessor configProcessor, Platform platform) {
+    public SplashConfig(IConfigProcessor configProcessor, Platform platform) {
         this.configProcessor = configProcessor;
         this.platform = platform;
-        this.configXml = configXml;
     }
 
     public void add(Splash splash) throws IOException {
-        this.configProcessor.addSplash(configXml, getPlatform(), splash.getSrc(), splash.getWidth(), splash.getHeight(), splash.getDensity());
+        this.configProcessor.addSplash(getPlatform(), splash.getSrc(), splash.getWidth(), splash.getHeight(), splash.getDensity());
     }
 
     public List<Splash> getAll() throws IOException {
-        return configProcessor.getSplashs(configXml, getPlatform());
+        return configProcessor.getSplashs(getPlatform());
     }
 
     private String getPlatform() {

@@ -2,6 +2,7 @@ package com.upplication.cordova;
 
 import com.upplication.cordova.config.*;
 import com.upplication.cordova.util.ConfigProcessor;
+import com.upplication.cordova.util.IConfigProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +13,8 @@ import java.nio.file.Path;
  */
 public class CordovaConfig {
 
-    private File project;
-    private ConfigProcessor configProcessor;
+    private Path project;
+    private IConfigProcessor configProcessor;
     private AccessConfig accessConfig;
     private AllowNavigationConfig allowNavigationConfig;
     private PreferencesConfig preferencesConfig;
@@ -21,24 +22,24 @@ public class CordovaConfig {
 
     private IconConfig iconConfigBase;
 
-    public CordovaConfig(File project){
+    public CordovaConfig(Path project, IConfigProcessor configProcessor){
         this.project = project;
         // TODO: https://keyholesoftware.com/2014/02/17/dependency-injection-options-for-java/
         // TODO: http://stackoverflow.com/questions/22184736/dependency-injection-using-guice-for-a-client-sdk-library-design-pattern
-        this.configProcessor = new ConfigProcessor();
-        this.accessConfig = new AccessConfig(getConfigXml(), configProcessor);
-        this.allowNavigationConfig = new AllowNavigationConfig(getConfigXml(), configProcessor);
-        this.preferencesConfig = new PreferencesConfig(getConfigXml(), configProcessor, null);
-        this.authorConfig = new AuthorConfig(getConfigXml(), configProcessor);
-        this.iconConfigBase = new IconConfig(getConfigXml(), configProcessor, null);
+        this.configProcessor = configProcessor;
+        this.accessConfig = new AccessConfig(configProcessor);
+        this.allowNavigationConfig = new AllowNavigationConfig(configProcessor);
+        this.preferencesConfig = new PreferencesConfig(configProcessor, null);
+        this.authorConfig = new AuthorConfig(configProcessor);
+        this.iconConfigBase = new IconConfig(configProcessor, null);
     }
 
     public void setName(String name) throws IOException {
-       configProcessor.setName(getConfigXml(), name);
+       configProcessor.setName(name);
     }
 
     public String getName() throws IOException {
-        return configProcessor.getName(getConfigXml());
+        return configProcessor.getName();
     }
 
     public void setVersion(int mandatory, int minor, int revision) throws IOException {
@@ -47,19 +48,19 @@ public class CordovaConfig {
     }
 
     public void setVersion(Version version) throws IOException {
-        configProcessor.setVersion(getConfigXml(), version.getVersion(), version.getIosCfBundleVersion(), version.getAndroidVersionCode());
+        configProcessor.setVersion(version.getVersion(), version.getIosCfBundleVersion(), version.getAndroidVersionCode());
     }
 
     public Version getVersion() throws IOException {
-        return configProcessor.getVersion(getConfigXml());
+        return configProcessor.getVersion();
     }
 
     public void setDescription(String description) throws IOException {
-        configProcessor.setDescription(getConfigXml(), description);
+        configProcessor.setDescription(description);
     }
 
     public String getDescription() throws IOException {
-        return configProcessor.getDescription(getConfigXml());
+        return configProcessor.getDescription();
     }
 
     public AuthorConfig author() {
@@ -83,12 +84,11 @@ public class CordovaConfig {
     }
 
     public PlatformConfig platform(Platform platform){
-        return new PlatformConfig(platform, configProcessor, getConfigXml());
+        return new PlatformConfig(platform, configProcessor);
     }
 
-    private Path getConfigXml(){
-        return project.toPath().resolve("config.xml");
+    public File getConfigXml(){
+        return project.resolve("config.xml").toFile();
     }
-
 
 }
