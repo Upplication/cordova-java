@@ -27,6 +27,11 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     private Document document;
     private ConfigProcessorDocument configProcessorDocument;
 
+    /**
+     * Open the configFile
+     * @param configFile Path mandatory
+     * @throws IOException
+     */
     public ConfigProcessorTransaction(Path configFile) throws IOException {
         this.configFile = configFile;
         this.document = openConfig(configFile);
@@ -42,6 +47,7 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
      * @throws IOException
      */
     private Document openConfig(Path configFile) throws IOException {
+        // TODO: http://stackoverflow.com/questions/128038/how-can-i-lock-a-file-using-java-if-possible
         try (InputStream stream = Files.newInputStream(configFile)){
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

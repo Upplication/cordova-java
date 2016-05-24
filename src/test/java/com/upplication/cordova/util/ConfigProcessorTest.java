@@ -3,10 +3,14 @@ package com.upplication.cordova.util;
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,85 +25,90 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 
 public class ConfigProcessorTest {
 
     private FileSystem fs;
+    private DocumentGetter document;
+    private Path configFile;
+    private ConfigProcessor processor;
+    private ConfigProcessorDocument processorDocument;
 
     @Before
-    public void setup() throws IOException {
-        fs = MemoryFileSystemBuilder.newLinux().build(UUID.randomUUID().toString());
+    public void setup() throws Exception {
+        this.fs = MemoryFileSystemBuilder.newLinux().build(UUID.randomUUID().toString());
+
+        final Document[] doc = new Document[1];
+        this.document = new DocumentGetter(doc);
+        this.processorDocument = mock(ConfigProcessorDocument.class);
+        this.configFile = createConfigXmlFile();
+        this.processor = spy(new ConfigProcessor(configFile));
+        doAnswer(new Answer<ConfigProcessorDocument>() {
+            @Override
+            public ConfigProcessorDocument answer(InvocationOnMock invocationOnMock) throws Throwable {
+                doc[0] = (Document)invocationOnMock.getArguments()[0];
+                return processorDocument;
+            }
+        }).when(processor).getProcessor(any(Document.class));
     }
 
+
+
     @Test
-    public void when_set_name_then_name_node_is_changed() throws Exception {
+    public void when_set_name_then_open_the_file_and_call_ConfigProcessorDocument_and_close() throws Exception {
 
         String name = "app name cool";
-
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setName(name);
 
-        // assert
-
-        Document resultFile = xmlToDocument(configFile);
-        NodeList nameNode = resultFile.getElementsByTagName("name");
-        assertNotNull(nameNode);
-        assertEquals(1, nameNode.getLength());
-
-        String nameNodeContent = nameNode.item(0).getTextContent();
-        assertNotNull(nameNodeContent);
-        assertEquals(name, nameNodeContent);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setName(eq(name));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
-    public void when_set_version_then_attr_version_is_changed() throws Exception {
+    public void when_set_version_then_open_the_file_and_call_ConfigProcessorDocument_and_close() throws Exception {
 
         String version = "2.0.0";
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
 
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setVersion(version, null, null);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList widget = resultFile.getElementsByTagName("widget");
-        assertNotNull(widget);
-        assertEquals(1, widget.getLength());
-
-        String versionAttrValue = widget.item(0).getAttributes().getNamedItem("version").getTextContent();
-        assertNotNull(versionAttrValue);
-        assertEquals(version, versionAttrValue);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setVersion(eq(version), isNull(String.class), isNull(Integer.class));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
     public void when_set_version_ios_then_attr_version_ios_is_changed() throws Exception {
 
         String version = "2.0.0";
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setVersion(version, version, null);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList widget = resultFile.getElementsByTagName("widget");
-        assertNotNull(widget);
-        assertEquals(1, widget.getLength());
-
-        String versionAttrValue = widget.item(0).getAttributes().getNamedItem("ios-CFBundleVersion").getTextContent();
-        assertNotNull(versionAttrValue);
-        assertEquals(version, versionAttrValue);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setVersion(eq(version), eq(version), isNull(Integer.class));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
@@ -107,159 +116,112 @@ public class ConfigProcessorTest {
 
         String version = "2.0.0";
         Integer versionAndroid = 2;
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setVersion(version, version, versionAndroid);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList widget = resultFile.getElementsByTagName("widget");
-        assertNotNull(widget);
-        assertEquals(1, widget.getLength());
-
-        String versionAttrValue = widget.item(0).getAttributes().getNamedItem("android-versionCode").getTextContent();
-        assertNotNull(versionAttrValue);
-        assertEquals(versionAndroid.toString(), versionAttrValue);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setVersion(eq(version), eq(version), eq(versionAndroid));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
     public void when_set_author_email_then_author_email_is_changed() throws Exception {
 
         String email = "email@email.com";
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setAuthorEmail(email);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList author = resultFile.getElementsByTagName("author");
-        assertNotNull(author);
-        assertEquals(1, author.getLength());
-
-        String emailAttrValue = author.item(0).getAttributes().getNamedItem("email").getTextContent();
-        assertNotNull(emailAttrValue);
-        assertEquals(email, emailAttrValue);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setAuthorEmail(eq(email));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
     public void when_set_author_name_then_author_content_is_changed() throws Exception {
 
         String authorName = "Upplication Software";
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setAuthorName(authorName);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList author = resultFile.getElementsByTagName("author");
-        assertNotNull(author);
-        assertEquals(1, author.getLength());
-
-        String nameNodeContent = author.item(0).getTextContent();
-        assertNotNull(nameNodeContent);
-        assertEquals(authorName, nameNodeContent);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setAuthorName(eq(authorName));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
     public void when_set_author_href_then_href_attr_is_changed() throws Exception {
 
         String authorHref = "upplication.com";
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setAuthorHref(authorHref);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList author = resultFile.getElementsByTagName("author");
-        assertNotNull(author);
-        assertEquals(1, author.getLength());
-
-        String hrefAttrValue = author.item(0).getAttributes().getNamedItem("href").getTextContent();
-        assertNotNull(hrefAttrValue);
-        assertEquals(authorHref, hrefAttrValue);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setAuthorHref(eq(authorHref));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
     public void when_set_description_then_description_node_content_is_changed() throws Exception {
 
         String description = "description";
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.setDescription(description);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList author = resultFile.getElementsByTagName("description");
-        assertNotNull(author);
-        assertEquals(1, author.getLength());
-
-        String descriptionNodeContent = author.item(0).getTextContent();
-        assertNotNull(descriptionNodeContent);
-        assertEquals(description, descriptionNodeContent);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).setDescription(eq(description));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     @Test
     public void when_set_allowNavigation_then_allowNavigation_node_is_added() throws Exception {
 
         String href = "*";
-        Path configFile = createFileFromDocument(createConfigXmlDocument());
-        ConfigProcessor processor = new ConfigProcessor(configFile);
+
+        InOrder inOrder = inOrder(processor, processorDocument);
 
         processor.addAllowNavigation(href);
 
         // assert
 
-        Document resultFile = xmlToDocument(configFile);
-        NodeList allowNavigationNode = resultFile.getElementsByTagName("allow-navigation");
-        assertNotNull(allowNavigationNode);
-        assertEquals(1, allowNavigationNode.getLength());
-
-        String hrefAttributeValue = allowNavigationNode.item(0).getAttributes().getNamedItem("href").getTextContent();
-        assertNotNull(hrefAttributeValue);
-        assertEquals(href, hrefAttributeValue);
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).addAllowNavigation(eq(href));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
     // helpers
 
-    private Document createConfigXmlDocument() throws Exception {
-
-        Path xml = Files.createTempFile(fs.getPath("/"), "config", ".xml");
-        Files.write(xml, xmlDefault.getBytes());
-
-        return xmlToDocument(xml);
-    }
-
-    private Path createFileFromDocument(Document doc) throws Exception {
+    private Path createConfigXmlFile() throws Exception {
         // write the content into xml file
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(doc);
         Path file = fs.getPath("/" + UUID.randomUUID().toString(), "config.xml");
         Files.createDirectories(file.getParent());
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            StreamResult result = new StreamResult(out);
-            transformer.transform(source, result);
-            Files.write(file, out.toByteArray(), StandardOpenOption.CREATE_NEW);
-        }
+        Files.write(file, xmlDefault.getBytes(), StandardOpenOption.CREATE_NEW);
         return file;
-    }
-
-    private Document xmlToDocument(Path file) throws SAXException, IOException, ParserConfigurationException {
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        try (InputStream in = Files.newInputStream(file)) {
-            return docBuilder.parse(in);
-        }
     }
 
     /**
@@ -291,4 +253,16 @@ public class ConfigProcessorTest {
             "        <allow-intent href=\"itms-apps:*\" />\n" +
             "    </platform>\n" +
             "</widget>";
+
+
+    private static class DocumentGetter {
+        private Document[] document;
+        public DocumentGetter(Document[] document) {
+            this.document = document;
+        }
+
+        public Document get() {
+            return this.document[0];
+        }
+    }
 }

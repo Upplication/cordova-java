@@ -47,7 +47,7 @@ public class ConfigProcessor implements IConfigProcessor{
     public void setVersion(String version, String iosCfBundleVersion, Integer androidVersionCode) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).setVersion(version, iosCfBundleVersion, androidVersionCode);
+        getProcessor(document).setVersion(version, iosCfBundleVersion, androidVersionCode);
 
         saveConfig(configFile, document);
     }
@@ -55,7 +55,7 @@ public class ConfigProcessor implements IConfigProcessor{
     @Override
     public Version getVersion() throws IOException {
         Document document = openConfig(configFile);
-        return new ConfigProcessorDocument(document).getVersion();
+        return getProcessor(document).getVersion();
     }
 
 
@@ -63,7 +63,7 @@ public class ConfigProcessor implements IConfigProcessor{
     public void setName(String name) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).setName(name);
+        getProcessor(document).setName(name);
 
         saveConfig(configFile, document);
     }
@@ -73,14 +73,14 @@ public class ConfigProcessor implements IConfigProcessor{
     public String getName() throws IOException {
         Document document = openConfig(configFile);
 
-        return new ConfigProcessorDocument(document).getName();
+        return getProcessor(document).getName();
     }
 
     @Override
     public void setDescription(String description) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).setDescription(description);
+        getProcessor(document).setDescription(description);
 
         saveConfig(configFile, document);
     }
@@ -89,14 +89,14 @@ public class ConfigProcessor implements IConfigProcessor{
     public String getDescription() throws IOException {
         Document document = openConfig(configFile);
 
-        return new ConfigProcessorDocument(document).getDescription();
+        return getProcessor(document).getDescription();
     }
 
     @Override
     public void setAuthorName(String authorName) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).setAuthorName(authorName);
+        getProcessor(document).setAuthorName(authorName);
 
         saveConfig(configFile, document);
     }
@@ -105,14 +105,14 @@ public class ConfigProcessor implements IConfigProcessor{
     public String getAuthorName() throws IOException {
         Document document = openConfig(configFile);
 
-        return new ConfigProcessorDocument(document).getAuthorName();
+        return getProcessor(document).getAuthorName();
     }
 
     @Override
     public void setAuthorEmail(String authorEmail) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).setAuthorEmail(authorEmail);
+        getProcessor(document).setAuthorEmail(authorEmail);
 
         saveConfig(configFile, document);
     }
@@ -121,14 +121,14 @@ public class ConfigProcessor implements IConfigProcessor{
     public String getAuthorEmail() throws IOException {
         Document document = openConfig(configFile);
 
-        return new ConfigProcessorDocument(document).getAuthorEmail();
+        return getProcessor(document).getAuthorEmail();
     }
 
     @Override
     public void setAuthorHref(String authorHref) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).setAuthorHref(authorHref);
+        getProcessor(document).setAuthorHref(authorHref);
 
         saveConfig(configFile, document);
     }
@@ -136,7 +136,7 @@ public class ConfigProcessor implements IConfigProcessor{
     @Override
     public String getAuthorHref() throws IOException {
         Document document = openConfig(configFile);
-        return new ConfigProcessorDocument(document).getAuthorHref();
+        return getProcessor(document).getAuthorHref();
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ConfigProcessor implements IConfigProcessor{
 
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).addAccess(accessOrigin, launchExternal, subdomains);
+        getProcessor(document).addAccess(accessOrigin, launchExternal, subdomains);
 
         saveConfig(configFile, document);
     }
@@ -154,7 +154,7 @@ public class ConfigProcessor implements IConfigProcessor{
 
         Document document = openConfig(configFile);
 
-        return new ConfigProcessorDocument(document).getAccess();
+        return getProcessor(document).getAccess();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class ConfigProcessor implements IConfigProcessor{
 
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).addAllowNavigation(href);
+        getProcessor(document).addAllowNavigation(href);
 
         saveConfig(configFile, document);
     }
@@ -172,14 +172,14 @@ public class ConfigProcessor implements IConfigProcessor{
 
         Document document = openConfig(configFile);
 
-        return new ConfigProcessorDocument(document).getAllowNavigation();
+        return getProcessor(document).getAllowNavigation();
     }
 
     @Override
     public void addPreference(String platform, String name, String value) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).addPreference(platform, name, value);
+        getProcessor(document).addPreference(platform, name, value);
 
         saveConfig(configFile, document);
     }
@@ -187,14 +187,14 @@ public class ConfigProcessor implements IConfigProcessor{
     @Override
     public List<Preference> getPreferences(String platform) throws IOException {
         Document document = openConfig(configFile);
-        return new ConfigProcessorDocument(document).getPreferences(platform);
+        return getProcessor(document).getPreferences(platform);
     }
 
     @Override
     public void addIcon(String platform, String src, Integer width, Integer height, String density) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).addIcon(platform, src, width, height, density);
+        getProcessor(document).addIcon(platform, src, width, height, density);
 
         saveConfig(configFile, document);
     }
@@ -202,14 +202,14 @@ public class ConfigProcessor implements IConfigProcessor{
     @Override
     public List<Icon> getIcons(String platform) throws IOException {
         Document document = openConfig(configFile);
-        return new ConfigProcessorDocument(document).getIcons(platform);
+        return getProcessor(document).getIcons(platform);
     }
 
     @Override
     public void addSplash(String platform, String src, Integer width, Integer height, String density) throws IOException {
         Document document = openConfig(configFile);
 
-        new ConfigProcessorDocument(document).addSplash(platform, src, width, height, density);
+        getProcessor(document).addSplash(platform, src, width, height, density);
 
         saveConfig(configFile, document);
     }
@@ -218,10 +218,14 @@ public class ConfigProcessor implements IConfigProcessor{
     public List<Splash> getSplashs(String platform) throws IOException {
         Document document = openConfig(configFile);
 
-        return new ConfigProcessorDocument(document).getSplashs(platform);
+        return getProcessor(document).getSplashs(platform);
     }
 
-    private Document openConfig(Path configFile) throws IOException {
+    //
+    // public 4 testing
+    //
+
+    public Document openConfig(Path configFile) throws IOException {
         try (InputStream stream = Files.newInputStream(configFile)){
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -239,7 +243,7 @@ public class ConfigProcessor implements IConfigProcessor{
      * @param newContent New content for the config file
      * @throws IOException
      */
-    private void saveConfig(Path configFile, Document newContent) throws IOException {
+    public void saveConfig(Path configFile, Document newContent) throws IOException {
         try (OutputStream out = Files.newOutputStream(configFile, StandardOpenOption.TRUNCATE_EXISTING)) {
             TransformerFactory transformerFactory = TransformerFactory
                     .newInstance();
@@ -251,5 +255,10 @@ public class ConfigProcessor implements IConfigProcessor{
         catch (TransformerException e){
             throw new IOException(e);
         }
+    }
+
+    //
+    public ConfigProcessorDocument getProcessor(Document document) throws IOException {
+        return new ConfigProcessorDocument(document);
     }
 }

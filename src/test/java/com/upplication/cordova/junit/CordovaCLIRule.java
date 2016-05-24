@@ -1,7 +1,6 @@
 package com.upplication.cordova.junit;
 
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -19,23 +18,20 @@ public class CordovaCLIRule extends ExternalResource {
 
     @Override
     protected void before() throws Throwable {
-        if (cordovaCLI == null ){
-            Properties props = new Properties();
-
-            try (InputStream streamResources = this.getClass().getResourceAsStream("/cordova.properties")){
-                if (streamResources != null) {
-                    props.load(streamResources);
-                }
+        Properties props = new Properties();
+        try (InputStream streamResources = this.getClass().getResourceAsStream("/cordova.properties")){
+            if (streamResources != null) {
+                props.load(streamResources);
             }
+        }
 
-            String nodePath = props.getProperty("node_path");
-            String cordovaPath = props.getProperty("cordova_path");
-            if (nodePath != null && !nodePath.isEmpty() &&
-                    cordovaPath != null && !cordovaPath.isEmpty()) {
-                cordovaCLI = new Cordova(nodePath, cordovaPath).getCLI();
-            } else {
-                cordovaCLI = new Cordova().getCLI();
-            }
+        String nodePath = props.getProperty("node_path");
+        String cordovaPath = props.getProperty("cordova_path");
+        if (nodePath != null && !nodePath.isEmpty() &&
+                cordovaPath != null && !cordovaPath.isEmpty()) {
+            cordovaCLI = new Cordova(nodePath, cordovaPath).getCLI();
+        } else {
+            cordovaCLI = new Cordova().getCLI();
         }
     }
 
