@@ -1,5 +1,8 @@
 package com.upplication.cordova;
 
+import com.upplication.cordova.junit.Condition;
+import com.upplication.cordova.junit.ConditionRule;
+import com.upplication.cordova.junit.OnlyMacOSX;
 import com.upplication.cordova.util.ConfigTransactionJob;
 import com.upplication.cordova.junit.CordovaCLIRule;
 import org.junit.Before;
@@ -19,6 +22,8 @@ public class CordovaIT {
     public CordovaCLIRule cordovaCLIRule = new CordovaCLIRule();
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+    @Rule
+    public ConditionRule rule = new ConditionRule();
 
     private CordovaCLI cordovaCLI;
 
@@ -50,6 +55,7 @@ public class CordovaIT {
     }
 
     @Test
+    @Condition(OnlyMacOSX.class)
     public void iOS() throws IOException {
         Path project = folder.newFolder("cordova-temp").toPath();
         CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");

@@ -1,7 +1,9 @@
 package com.upplication.cordova.util;
 
 
-import com.upplication.cordova.exception.CordovaCommandException;
+import com.upplication.cordova.junit.Condition;
+import com.upplication.cordova.junit.ConditionRule;
+import com.upplication.cordova.junit.OnlyMacOSX;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -16,31 +18,24 @@ public class CordovaCommandIT {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+    @Rule
+    public ConditionRule rule = new ConditionRule();
 
-    @Test(expected = CordovaCommandException.class)
+    @Test(expected = IllegalStateException.class)
     public void command_with_no_cordova_path() throws IOException {
         CordovaCommand cordovaCommand = new CordovaCommand(folder.newFolder(), null);
-        Map<String, String> envs = new HashMap<>();
-        envs.put("PATH", "/usr/bin:/bin:/usr/sbin:/sbin");
-
-        String result = cordovaCommand.exec(new String[]{"create"}, envs);
+        String result = cordovaCommand.exec(new String[]{"create"}, null);
 
         assertNotNull(result);
-
     }
 
     @Test
-    public void spike() throws IOException {
-        Environment environment = new Environment();
-        environment.setNodePath("/Usr/local/bin/node");
-        environment.setCordovaPath("/Usr/local/bin/cordova");
-        CordovaCommand cordovaCommand = new CordovaCommand(folder.newFolder(), environment);
-        Map<String, String> envs = new HashMap<>();
-        envs.put("PATH", "/usr/bin:/bin:/usr/sbin:/sbin");
+    @Condition(OnlyMacOSX.class)
+    public void cordova_create_project_macosx() throws IOException {
 
-        String result = cordovaCommand.exec(new String[]{"create", "hellou a", "es.upplication.ios23424", "hellou a"}, envs);
+        CordovaCommand cordovaCommand = new CordovaCommand(folder.newFolder(), null);
+        String result = cordovaCommand.exec("create", "hellou a", "es.upplication.ios23424", "hellou a");
 
         assertNotNull(result);
-
     }
 }

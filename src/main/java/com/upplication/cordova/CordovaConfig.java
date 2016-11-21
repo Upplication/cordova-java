@@ -1,7 +1,6 @@
 package com.upplication.cordova;
 
 import com.upplication.cordova.config.*;
-import com.upplication.cordova.util.ConfigProcessor;
 import com.upplication.cordova.util.IConfigProcessor;
 
 import java.io.File;
@@ -13,7 +12,7 @@ import java.nio.file.Path;
  */
 public class CordovaConfig {
 
-    private Path project;
+    private Path configXml;
     private IConfigProcessor configProcessor;
     private AccessConfig accessConfig;
     private AllowNavigationConfig allowNavigationConfig;
@@ -22,8 +21,8 @@ public class CordovaConfig {
 
     private IconConfig iconConfigBase;
 
-    public CordovaConfig(Path project, IConfigProcessor configProcessor){
-        this.project = project;
+    public CordovaConfig(Path configXml, IConfigProcessor configProcessor){
+        this.configXml = configXml;
         // TODO: https://keyholesoftware.com/2014/02/17/dependency-injection-options-for-java/
         // TODO: http://stackoverflow.com/questions/22184736/dependency-injection-using-guice-for-a-client-sdk-library-design-pattern
         this.configProcessor = configProcessor;
@@ -63,6 +62,10 @@ public class CordovaConfig {
         return configProcessor.getDescription();
     }
 
+    public void add(String xml) throws IOException {
+        configProcessor.add(xml);
+    }
+
     public AuthorConfig author() {
         return authorConfig;
     }
@@ -88,7 +91,7 @@ public class CordovaConfig {
     }
 
     public File getConfigXml(){
-        return project.resolve("config.xml").toFile();
+        return configXml.toFile();
     }
 
 }

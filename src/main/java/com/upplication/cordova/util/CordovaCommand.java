@@ -29,12 +29,24 @@ public class CordovaCommand {
         return exec(command, null);
     }
 
+    /**
+     * Execute a list of commands using the environment and the project provided (if not null)
+     * If the environment is not provided we execute all the commands AFTER the cordova command, so they must be
+     * arguments for the cordova cli command.
+     *
+     * @param command Array of commands to execute in order, mandatory
+     * @param newEnv Map with the environment to set to the ProcessBuilder if not null
+     * @return String the output of the command
+     * @throws CordovaCommandException if the result is not exit with a 0
+     */
     public String exec(String[] command, Map<String,String> newEnv) {
         try {
             List<String> commands = new ArrayList<>();
             if (environment != null) {
-                commands.add(environment.getNodePath());
-                commands.add(environment.getCordovaPath());
+                if (environment.getNodePath() != null)
+                    commands.add(environment.getNodePath());
+                if (environment.getCordovaPath() != null)
+                    commands.add(environment.getCordovaPath());
             } else {
                 commands.add("cordova");
             }
@@ -91,8 +103,8 @@ public class CordovaCommand {
      * Retrieves the error of a process
      *
      * @param process Process
-     * @return Error
-     * @throws IOException
+     * @return The error message
+     * @throws IOException if the error stream is already closed or something unexpected happens
      */
     public StringBuilder getErrorProcess(Process process) throws IOException {
 

@@ -10,11 +10,23 @@ public class Cordova {
 
     private Environment environment;
 
+    /**
+     * Create an instance of Cordova setting explicit the nodePath and/or the cordovaPath
+     *
+     * @param nodePath
+     * @param cordovaPath
+     */
     public Cordova(String nodePath, String cordovaPath){
 
+        assert nodePath != null || cordovaPath != null;
+
         environment = new Environment();
-        environment.setCordovaPath(cordovaPath);
-        environment.setNodePath(nodePath);
+
+        if (nodePath != null)
+            environment.setNodePath(nodePath);
+
+        if (cordovaPath != null)
+            environment.setCordovaPath(cordovaPath);
 
         assert getCLI().getVersion() != null;
     }

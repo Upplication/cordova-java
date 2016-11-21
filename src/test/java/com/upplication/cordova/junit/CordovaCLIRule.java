@@ -27,8 +27,8 @@ public class CordovaCLIRule extends ExternalResource {
 
         String nodePath = props.getProperty("node_path");
         String cordovaPath = props.getProperty("cordova_path");
-        if (nodePath != null && !nodePath.isEmpty() &&
-                cordovaPath != null && !cordovaPath.isEmpty()) {
+        if ((nodePath != null && !nodePath.isEmpty()) ||
+                (cordovaPath != null && !cordovaPath.isEmpty())) {
             cordovaCLI = new Cordova(nodePath, cordovaPath).getCLI();
         } else {
             cordovaCLI = new Cordova().getCLI();

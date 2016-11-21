@@ -3,17 +3,17 @@ package com.upplication.cordova.commands;
 import com.upplication.cordova.CordovaProject;
 import com.upplication.cordova.Platform;
 import com.upplication.cordova.PlatformResume;
-import com.upplication.cordova.Plugin;
-import com.upplication.cordova.junit.CordovaCLIRule;
+import com.upplication.cordova.junit.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static com.upplication.cordova.Platform.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -22,6 +22,8 @@ public class PlatformIT {
     public CordovaCLIRule cordovaCLIRule = new CordovaCLIRule();
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+    @Rule
+    public ConditionRule rule = new ConditionRule();
 
     private CordovaProject cordova;
 
@@ -31,18 +33,33 @@ public class PlatformIT {
     }
 
     @Test
-    public void list_empty_installed() {
+    @Condition(OnlyMacOSX.class)
+    public void list_with_macosx_available_installed() {
         PlatformResume platformResume = cordova.platform().list();
 
         assertFalse(platformResume.getAvailable().isEmpty());
         assertTrue(platformResume.getInstalled().isEmpty());
-        for (Platform platform : Platform.values()) {
+        for (Platform platform : Arrays.asList(IOs, AmazonFireos, Android, Blackberry10, Browser, FirefoxOS, WebOS, OSx)) {
             assertTrue(platformResume.getAvailable().contains(platform));
         }
     }
 
     @Test
+    @Condition(OnlyWindows.class)
+    public void list_with_windows_available_installed() {
+        PlatformResume platformResume = cordova.platform().list();
+
+        assertFalse(platformResume.getAvailable().isEmpty());
+        assertTrue(platformResume.getInstalled().isEmpty());
+        for (Platform platform : Arrays.asList(AmazonFireos, Android, Blackberry10, Browser, FirefoxOS, WebOS, Windows, WP8)) {
+            assertTrue(platformResume.getAvailable().contains(platform));
+        }
+    }
+
+    @Test
+    @Condition(OnlyMacOSX.class)
     public void list_with_ios_installed() {
+
         cordova.platform().add(Platform.IOs);
         PlatformResume platformResume = cordova.platform().list();
 
@@ -52,7 +69,9 @@ public class PlatformIT {
     }
 
     @Test
+    @Condition(OnlyMacOSX.class)
     public void list_with_android_and_ios_installed() {
+
         cordova.platform().add(Platform.IOs);
         cordova.platform().add(Platform.Android);
         PlatformResume platformResume = cordova.platform().list();
@@ -65,7 +84,9 @@ public class PlatformIT {
     }
 
     @Test
+    @Condition(OnlyMacOSX.class)
     public void install_ios_and_remove() {
+
         cordova.platform().add(Platform.IOs);
         PlatformResume platformResume = cordova.platform().list();
         assertEquals(Platform.IOs, platformResume.getInstalled().get(0));
@@ -75,5 +96,4 @@ public class PlatformIT {
         PlatformResume platformResumeFinal = cordova.platform().list();
         assertTrue(platformResumeFinal.getInstalled().isEmpty());
     }
-
 }

@@ -9,15 +9,15 @@ Cordova Java Client to automate tasks.
 
 ### Download from Maven Central
 
-TODO
-
 ```XML
 <dependency>
 	<groupId>com.upplication</groupId>
 	<artifactId>cordova-java</artifactId>
-	<version>1.0.0</version>
+	<version>6.1.1</version>
 </dependency>
 ```
+
+The version 6.1.1 works well with cordova 6.1.1
 
 ## How to contribute
 
@@ -58,6 +58,8 @@ Thats all, now you can run the test with the command: `mvn test` or/and `mvn tes
 Cordova cordova = new Cordova("path to node", "path to cordova");
 // or if its cordova already on the path
 Cordova cordova = new Cordova();
+// or some other combinations:
+Cordova cordova = new Cordova(null, "path to cordova"); // works for me in windows 10
 ```
 
 ```java
@@ -204,6 +206,25 @@ Files.copy(src, dest);
 Icon icon = Icon.create().src("src/img").height(100).width(100);
 cordovaProject.config().icon().add(icon);
 Files.copy(src, cordovaProject.getProject().toPath().resolve(icon.getSrc()));
+```
+
+Add custom tags to config.xml
+
+```java
+
+// custom tags:
+cordovaProject.config().add("<universal-links><host name=\"upplication.com\"></universal-links>");
+
+//or for better perfomance, do a transaction
+cordovaProject.config(new ConfigTransactionJob() {
+    @Override
+    public void exec(CordovaConfig config) throws IOException {
+        config.setName("hello");
+        config.setVersion(Version.create().version("100"));
+        config.add("<universal-links><host name=\"upplication.com\"></universal-links>");
+    }
+}
+
 ```
 
 ## LICENSE:

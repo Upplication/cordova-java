@@ -187,4 +187,9 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     public List<Splash> getSplashs(String platform) throws IOException {
         return configProcessorDocument.getSplashs(platform);
     }
+
+    @Override
+    public void add(String xml) throws IOException {
+        configProcessorDocument.add(xml);
+    }
 }

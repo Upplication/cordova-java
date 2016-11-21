@@ -214,6 +214,23 @@ public class ConfigProcessorTest {
         inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
     }
 
+    @Test
+    public void when_set_custom_xml_then_append_the_string() throws Exception {
+
+        String xml = "<universal-link></universal-link>";
+
+        InOrder inOrder = inOrder(processor, processorDocument);
+
+        processor.add(xml);
+
+        // assert
+
+        inOrder.verify(processor).openConfig(eq(configFile));
+        inOrder.verify(processor).getProcessor(eq(document.get()));
+        inOrder.verify(processorDocument).add(eq(xml));
+        inOrder.verify(processor).saveConfig(eq(configFile), eq(document.get()));
+    }
+
     // helpers
 
     private Path createConfigXmlFile() throws Exception {

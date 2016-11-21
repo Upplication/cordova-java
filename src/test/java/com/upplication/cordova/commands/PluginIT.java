@@ -61,4 +61,25 @@ public class PluginIT {
         assertEquals("Geolocation", plugins.get(1).getName());
     }
 
+    @Test
+    public void remove_plugin() {
+        cordova.plugin().add("cordova-plugin-geolocation");
+        cordova.plugin().remove("cordova-plugin-geolocation");
+        List<Plugin> plugins = cordova.plugin().get();
+
+        assertTrue(plugins.isEmpty());
+    }
+
+    @Test
+    public void remove_one_plugin() {
+        cordova.plugin().add("cordova-plugin-geolocation");
+        cordova.plugin().add("cordova-plugin-console");
+        cordova.plugin().remove("cordova-plugin-geolocation");
+        List<Plugin> plugins = cordova.plugin().get();
+
+        assertTrue(!plugins.isEmpty());
+        assertEquals(1, plugins.size());
+        assertEquals("cordova-plugin-console", plugins.get(0).getFullName());
+    }
+
 }

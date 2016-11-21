@@ -221,6 +221,14 @@ public class ConfigProcessor implements IConfigProcessor{
         return getProcessor(document).getSplashs(platform);
     }
 
+    @Override
+    public void add(String xml) throws IOException {
+        Document document = openConfig(configFile);
+        getProcessor(document).add(xml);
+
+        saveConfig(configFile, document);
+    }
+
     //
     // public 4 testing
     //

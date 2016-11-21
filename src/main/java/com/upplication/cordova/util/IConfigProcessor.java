@@ -214,4 +214,16 @@ public interface IConfigProcessor {
      * @throws IOException
      */
     List<Splash> getSplashs(String platform) throws IOException;
+
+
+    /**
+     * Add some custom fragments of XML tag.
+     * Some plugins add their custom tags to the config.xml so we need to support custom fragments.
+     *
+     * TODO: use jackson-dataformat-xml or jaxb to append custom Java Object to the config.xml and retrieve it
+     *
+     * @param xml String mandatory tag
+     * @throws IOException if the xml is invalid and cant be parsed
+     */
+    void add(String xml) throws IOException;
 }

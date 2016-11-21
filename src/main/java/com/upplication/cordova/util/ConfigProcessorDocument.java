@@ -18,6 +18,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -413,8 +415,7 @@ s     * @param platform String platform to find
      */
     public List<Splash> getSplashs(String platform) {
 
-        Element widget = (Element) this.document.getElementsByTagName(widgetNodeName).item(0);
-        Element parent = widget;
+        Element parent = (Element) this.document.getElementsByTagName(widgetNodeName).item(0);
 
         List<Splash> result = new ArrayList<>();
 
@@ -443,6 +444,29 @@ s     * @param platform String platform to find
         }
 
         return result;
+    }
+
+    /**
+     * Add a custom valid XML
+     *
+     * @param tag String never null.
+     * @throws IllegalArgumentException if the tag is not valid tag
+     */
+    public void add(String tag) {
+
+        Element elem;
+        try (java.io.InputStream sbis = new java.io.ByteArrayInputStream(tag.getBytes(StandardCharsets.UTF_8))) {
+            DocumentBuilderFactory b = DocumentBuilderFactory.newInstance();
+            b.setNamespaceAware(false);
+            elem = b.newDocumentBuilder().parse(sbis).getDocumentElement();
+        }
+        catch (IOException | ParserConfigurationException | SAXException e) {
+            throw new IllegalArgumentException("Xml element: " + tag + " is not a valid xml fragment", e);
+        }
+
+        Node node = this.document.importNode(elem, true);
+        Element widget = (Element) this.document.getElementsByTagName(widgetNodeName).item(0);
+        widget.appendChild(node);
     }
 
     /**
@@ -523,5 +547,6 @@ s     * @param platform String platform to find
         }
         return parent;
     }
+
 
 }
