@@ -14,6 +14,7 @@ package com.upplication.cordova.junit;
 import java.lang.reflect.Modifier;
 
 import org.junit.Assume;
+import org.junit.ClassRule;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
@@ -21,7 +22,7 @@ import org.junit.runners.model.Statement;
 /**
  * https://gist.github.com/rherrmann/7447571
  */
-public class ConditionRule implements MethodRule {
+public class ConditionRule implements MethodRule{
 
     public interface Condition {
         boolean isSatisfied();
@@ -41,11 +42,14 @@ public class ConditionRule implements MethodRule {
     }
 
     private static boolean hasConditionalIgnoreAnnotation(FrameworkMethod method) {
-        return method.getAnnotation(com.upplication.cordova.junit.Condition.class) != null;
+        return method.getAnnotation(com.upplication.cordova.junit.Condition.class) != null ||
+                method.getDeclaringClass().getAnnotation(com.upplication.cordova.junit.Condition.class) != null;
     }
 
     private static Condition getCondition(Object target, FrameworkMethod method) {
         com.upplication.cordova.junit.Condition annotation = method.getAnnotation(com.upplication.cordova.junit.Condition.class);
+        if (annotation == null)
+            annotation = method.getDeclaringClass().getAnnotation(com.upplication.cordova.junit.Condition.class);
         return new IgnoreConditionCreator(target, annotation).create();
     }
 

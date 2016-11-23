@@ -6,7 +6,7 @@
     <name>Cordova Java</name>
     <groupId>com.upplication</groupId>
     <artifactId>cordova-java</artifactId>
-    <version>6.1.1</version>
+    <version>6.1.2</version>
     <description>Cordova CLI Java API</description>
     <url>https://github.com/Upplication/cordova-java</url>
     <licenses>
@@ -31,6 +31,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <version.org.slf4j.slf4j-api>1.6.1</version.org.slf4j.slf4j-api>
+        <version.junit.junit>4.12</version.junit.junit>
+        <version.org.slf4j.slf4j-log4j12>1.6.1</version.org.slf4j.slf4j-log4j12>
+        <version.com.github.marschall.memoryfilesystem>0.9.0</version.com.github.marschall.memoryfilesystem>
+        <version.org.mockito.mockito-core>2.2.21</version.org.mockito.mockito-core>
     </properties>
 
 
@@ -38,34 +44,34 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
+            <version>${version.org.slf4j.slf4j-api}</version>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${version.junit.junit}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
+            <version>${version.org.slf4j.slf4j-log4j12}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.marschall</groupId>
             <artifactId>memoryfilesystem</artifactId>
-            <version>0.9.0</version>
+            <version>${version.com.github.marschall.memoryfilesystem}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.2.21</version>
+            <version>${version.org.mockito.mockito-core}</version>
             <scope>test</scope>
         </dependency>
 

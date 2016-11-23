@@ -25,8 +25,18 @@ public class CordovaCommand {
         this.environment = environment;
     }
 
+    /**
+     * Execute the command and the options
+     * @param command
+     * @return
+     * @throws CordovaCommandException if the result is not exit with a 0
+     */
     public String exec(String ... command) {
         return exec(command, null);
+    }
+
+    public String exec(List<String> command) {
+        return exec(command.toArray(new String[command.size()]), null);
     }
 
     /**

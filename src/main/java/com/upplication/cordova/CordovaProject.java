@@ -6,6 +6,8 @@ import com.upplication.cordova.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A cordova created project
@@ -29,12 +31,23 @@ public class CordovaProject {
         this.cordovaConfig = new CordovaConfig(getConfigXml(), new ConfigProcessor(getConfigXml()));
     }
 
+    /**
+     * Build the project
+     * @see <a href="https://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html#cordova-build-command">https://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html#cordova-build-command</a>
+     */
     public void build() {
-        cordovaCommand.exec("build");
+        build(BuildOpts.create());
+    }
+
+    public void build(BuildOpts opts) {
+        List<String> commands = new ArrayList<>();
+        commands.add("build");
+        commands.addAll(opts.toList());
+        cordovaCommand.exec(commands);
     }
 
     public void build(Platform platform) {
-        cordovaCommand.exec("build", platform.name().toLowerCase());
+        build(BuildOpts.create().withPlatforms(platform));
     }
 
     public void prepare() {
