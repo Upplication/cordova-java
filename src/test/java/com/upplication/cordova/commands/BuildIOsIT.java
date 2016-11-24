@@ -46,14 +46,21 @@ public class BuildIOsIT {
 
         cordovaProject.build();
 
-        Path androidFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
-        assertTrue(Files.isDirectory(androidFolder));
-        assertTrue(Files.exists(androidFolder.resolve("build").resolve("outputs").resolve("apk").resolve("android-debug.apk")));
+        Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
+        assertTrue(Files.isDirectory(iosFolder));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("hello").resolve("Hello.build")));
     }
 
     @Test
-    public void build_release() throws IOException {
-        cordovaProject.build(BuildIOsOpts.create().withNoSign(true).withRelease(true));
+    public void build_release_with_no_sign() throws IOException {
+        cordovaProject.build(BuildIOsOpts.create()
+                .withNoSign(true)
+                .withRelease(true)
+                .withDevice(true));
+
+        Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
+        assertTrue(Files.isDirectory(iosFolder));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("device").resolve("Hello.ipa")));
     }
 
 
