@@ -138,6 +138,9 @@ public class BuildIOsOpts extends BuildOpts {
         if (packageType != null)
             commands.add("--packageType=" + packageType);
 
+        if (noSign)
+            commands.add("--noSign");
+
         if (buildFlag != null) {
             for (String flag : buildFlag){
                 commands.add("--buildFlag=" + flag);

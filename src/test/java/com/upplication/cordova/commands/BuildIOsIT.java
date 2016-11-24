@@ -48,7 +48,7 @@ public class BuildIOsIT {
 
         Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
         assertTrue(Files.isDirectory(iosFolder));
-        assertTrue(Files.exists(iosFolder.resolve("build").resolve("hello").resolve("Hello.build")));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("Hello.build")));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class BuildIOsIT {
 
         Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
         assertTrue(Files.isDirectory(iosFolder));
-        assertTrue(Files.exists(iosFolder.resolve("build").resolve("device").resolve("Hello.ipa")));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("device").resolve("Hello.app")));
     }
 
 
