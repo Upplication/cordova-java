@@ -42,27 +42,70 @@ public class BuildIOsIT {
     }
 
     @Test
-    public void build_default() throws IOException {
+    public void build_with_default_params_then_create_debug_app_to_run_in_emulator() throws IOException {
 
         cordovaProject.build();
 
+        // TODO: how to check if the app is in debug mode or not?
+
         Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
         assertTrue(Files.isDirectory(iosFolder));
-        assertTrue(Files.exists(iosFolder.resolve("build").resolve("Hello.build")));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("emulator").resolve("Hello.app")));
     }
 
     @Test
-    public void build_release_with_no_sign() throws IOException {
-        cordovaProject.build(BuildIOsOpts.create()
-                .withNoSign(true)
-                .withRelease(true)
-                .withDevice(true));
+    public void build_with_release_then_create_app_to_run_in_emulator() throws IOException {
+        cordovaProject.build(BuildIOsOpts.create().withRelease(true));
 
         Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
         assertTrue(Files.isDirectory(iosFolder));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("emulator").resolve("Hello.app")));
+    }
+
+    @Test(expected = CordovaCommandException.class)
+    public void build_with_device_and_no_sign_then_create_debug_app_to_run_in_device() throws IOException {
+        cordovaProject.build(BuildIOsOpts.create().withNoSign(true).withDevice(true));
+
+        // You must have the "iPhone Developer: xxxxx" imported in your keychain
+
+        // TODO: how to check if the app is in debug mode or not?
+        /*
+        Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
+        assertTrue(Files.isDirectory(iosFolder));
         assertTrue(Files.exists(iosFolder.resolve("build").resolve("device").resolve("Hello.app")));
+        */
+    }
+
+    @Test(expected = CordovaCommandException.class)
+    public void build_with_device_no_sign_and_release_then_create_to_run_in_device() throws IOException {
+        cordovaProject.build(BuildIOsOpts.create().withNoSign(true).withDevice(true).withRelease(true));
+
+        // You must have the "iPhone Distribution: xxxxx" imported in your keychain
+
+        /*
+        Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
+        assertTrue(Files.isDirectory(iosFolder));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("device").resolve("Hello.app")));
+        */
+    }
+
+    @Test(expected = CordovaCommandException.class)
+    public void build_with_device_and_release_then_create_ipa_to_run_in_device() throws IOException {
+        cordovaProject.build(BuildIOsOpts.create().withDevice(true).withRelease(true));
+
+        // You must have the "iPhone Distribution: xxxxx" imported in your keychain
+
+        /*
+        Path iosFolder = cordovaProject.getProject().toPath().resolve("platforms").resolve("ios");
+        assertTrue(Files.isDirectory(iosFolder));
+        assertTrue(Files.exists(iosFolder.resolve("build").resolve("device").resolve("Hello.ipa")));
+        */
     }
 
 
-    // TODO:
+
+    @Test(expected = CordovaCommandException.class)
+    public void build_with_device_and_without_code_sign_then_throws_cordova_command_exeption() throws IOException {
+        cordovaProject.build(BuildIOsOpts.create().withDevice(true));
+    }
 }
