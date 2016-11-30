@@ -104,7 +104,12 @@ public class CordovaCommand {
                 }
             }
         }
-        catch (IOException | InterruptedException e) {
+        catch (IOException e) {
+            String message = "Cannot run the 'cordova' command";
+            logger.error(message, e);
+            throw new CordovaCommandException(message, e);
+        }
+        catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
     }

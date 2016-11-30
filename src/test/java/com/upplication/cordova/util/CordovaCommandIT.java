@@ -1,6 +1,7 @@
 package com.upplication.cordova.util;
 
 
+import com.upplication.cordova.exception.CordovaCommandException;
 import com.upplication.cordova.junit.Condition;
 import com.upplication.cordova.junit.ConditionRule;
 import com.upplication.cordova.junit.OnlyMacOSX;
@@ -9,8 +10,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -21,7 +20,7 @@ public class CordovaCommandIT {
     @Rule
     public ConditionRule rule = new ConditionRule();
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = CordovaCommandException.class)
     public void command_with_no_cordova_path() throws IOException {
         CordovaCommand cordovaCommand = new CordovaCommand(folder.newFolder(), null);
         String result = cordovaCommand.exec(new String[]{"create"}, null);
