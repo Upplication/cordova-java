@@ -26,15 +26,27 @@ public class CordovaCommand {
     }
 
     /**
-     * Execute the command and the options
-     * @param command
-     * @return
+     * Execute a list of cordova commands
+     * @param command var args of cordova commands to exec
+     * @return String with the output of the command
+     *
      * @throws CordovaCommandException if the result is not exit with a 0
+     *
+     * @see CordovaCommand#exec(String[], Map)
      */
     public String exec(String ... command) {
         return exec(command, null);
     }
 
+    /**
+     * Execute a list of cordova commands
+     * @param command List String of cordova commands
+     * @return String with the output
+     *
+     * @throws CordovaCommandException if the result is not exit with a 0
+     *
+     * @see CordovaCommand#exec(String[], Map)
+     */
     public String exec(List<String> command) {
         return exec(command.toArray(new String[command.size()]), null);
     }

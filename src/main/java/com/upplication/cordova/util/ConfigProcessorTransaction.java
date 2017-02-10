@@ -30,7 +30,7 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     /**
      * Open the configFile
      * @param configFile Path mandatory
-     * @throws IOException
+     * @throws IOException if the config file cant be opened
      */
     public ConfigProcessorTransaction(Path configFile) throws IOException {
         this.configFile = configFile;
@@ -60,7 +60,7 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
 
     /**
      * Saves the config file
-     * @throws IOException
+     * @throws IOException if the config file cant be writted or closed
      */
     @Override
     public void close() throws IOException {

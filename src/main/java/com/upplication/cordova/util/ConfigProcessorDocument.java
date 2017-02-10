@@ -46,7 +46,7 @@ public class ConfigProcessorDocument {
 
     private Document document;
 
-    public ConfigProcessorDocument(Document document) throws IOException {
+    public ConfigProcessorDocument(Document document) {
         this.document = document;
     }
 
@@ -120,9 +120,8 @@ public class ConfigProcessorDocument {
      * Get the description of the application in the config.xml file
      *
      * @return the description never null
-     * @throws IOException
      */
-    public String getDescription() throws IOException {
+    public String getDescription() {
         Element descriptionTag = (Element) this.document.getElementsByTagName(descriptionNodeName).item(0);
         return descriptionTag.getTextContent();
     }
@@ -295,7 +294,7 @@ public class ConfigProcessorDocument {
     /**
      * Get the list of preferences allowed in the config.xml for a concrete platform
      *
-s     * @param platform String platform to find
+     * @param platform String platform to find
      * @return List Preference never null
      */
     public List<Preference> getPreferences(String platform) {
@@ -353,7 +352,6 @@ s     * @param platform String platform to find
      *
      * @param platform String platform to search: ios, android...
      * @return List Icon never null
-     * @throws IOException
      */
     public List<Icon> getIcons(String platform) {
         List<Icon> result = new ArrayList<>();

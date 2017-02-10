@@ -133,6 +133,7 @@ public class BuildAndroidOpts extends BuildOpts {
     /**
      * Add extra gradle args
      * @param args only allower one, i think is a cordova limitation
+     * @return this
      */
     public BuildAndroidOpts withGradleArgs(GArg args) {
         this.gargs = new GArg[]{args};
@@ -192,13 +193,14 @@ public class BuildAndroidOpts extends BuildOpts {
     }
 
     public static class GArg {
+
         private String commandArg;
 
         /**
          * If this is set, then multiple APK files will be generated: One per native platform supported by library projects (x86, ARM, etc).
          * This can be important if your project uses large native libraries, which can drastically increase the size of the generated APK. If not set, then a single APK will be generated which can be used on all devices
-         * @param buildMultipleApk
-         * @return
+         * @param buildMultipleApk boolean
+         * @return this
          */
         public static GArg buildMultipleApk(boolean buildMultipleApk) {
             return new GArg("-PcdvBuildMultipleApk=" + buildMultipleApk);
@@ -206,8 +208,8 @@ public class BuildAndroidOpts extends BuildOpts {
 
         /**
          * Overrides the automatically detected android.buildToolsVersion value
-         * @param buildToolsVersion
-         * @return
+         * @param buildToolsVersion String like android-N, example: android-23
+         * @return this
          */
         public static GArg buildToolsVersion(String buildToolsVersion) {
             return new GArg("-PcdvBuildToolsVersion=" + buildToolsVersion);
@@ -215,8 +217,8 @@ public class BuildAndroidOpts extends BuildOpts {
 
         /**
          * Overrides the automatically detected android.compileSdkVersion value
-         * @param compileSdkVersion
-         * @return
+         * @param compileSdkVersion String like 23, 22,
+         * @return this
          */
         public static GArg compileSdkVersion(String compileSdkVersion) {
             return new GArg("-PcdvCompileSdkVersion=" + compileSdkVersion);
