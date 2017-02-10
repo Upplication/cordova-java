@@ -82,13 +82,13 @@ public class BuildAndroidIT {
     }
 
     @Test
-    public void build_change_version_negative_then_save_1() throws IOException {
+    public void build_change_version_negative_then_save_10000() throws IOException {
 
         cordovaProject.build(BuildAndroidOpts.create().withVersionCode(-10));
 
         Path androidManifestCompiled = cordovaProject.getProject().toPath().resolve("platforms/android/build/intermediates/manifests/full/debug/AndroidManifest.xml");
         assertTrue(Files.exists(androidManifestCompiled));
-        assertTrue(new String(Files.readAllBytes(androidManifestCompiled), StandardCharsets.UTF_8).contains("android:versionCode=\"1\""));
+        assertTrue(new String(Files.readAllBytes(androidManifestCompiled), StandardCharsets.UTF_8).contains("android:versionCode=\"10000\""));
     }
 
     @Test

@@ -11,8 +11,11 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
+import java.nio.file.Files;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class AuthorIT {
     @Rule
@@ -34,6 +37,7 @@ public class AuthorIT {
         cordova.config().author().setName(name);
 
         assertEquals(name, cordova.config().author().getName());
+        assertThat(new String(Files.readAllBytes(cordova.getProject().toPath().resolve("config.xml"))), containsString("<name>" + name + "</name>"));
     }
 
     @Test
