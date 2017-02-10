@@ -4,7 +4,7 @@ os:
 env: JAVA_HOME=$(/usr/libexec/java_home)
 language: java
 before_install:
-- npm install -g cordova@6.1.1
+- npm install -g cordova@6.5.0
 - wget http://dl.google.com/android/android-sdk_r24.4.1-macosx.zip
 - unzip android-sdk_r24.4.1-macosx.zip
 - export ANDROID_HOME=$PWD/android-sdk-macosx

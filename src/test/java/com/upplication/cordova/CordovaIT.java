@@ -41,7 +41,7 @@ public class CordovaIT {
     public void version() throws IOException {
         String version = cordovaCLI.getVersion();
         assertNotNull(version);
-        assertEquals("6.1.1", version);
+        assertEquals("6.5.0", version);
     }
 
     @Test
@@ -52,6 +52,7 @@ public class CordovaIT {
         cordovaProject.platform().add(Platform.Android);
         cordovaProject.prepare();
         cordovaProject.compile();
+        cordovaProject.build(BuildAndroidOpts.create());
     }
 
     @Test

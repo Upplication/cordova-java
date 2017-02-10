@@ -224,6 +224,15 @@ public class BuildAndroidOpts extends BuildOpts {
             return new GArg("-PcdvCompileSdkVersion=" + compileSdkVersion);
         }
 
+        /**
+         * Build with gradle daemon disabled.
+         * This is the recommended option to work in 'server mode'
+         * @return
+         */
+        public static GArg noDaemon() {
+            return new GArg("--no-daemon");
+        }
+
         private GArg(String commandArg) {
             this.commandArg = commandArg;
         }

@@ -6,7 +6,7 @@
     <name>Cordova Java</name>
     <groupId>com.upplication</groupId>
     <artifactId>cordova-java</artifactId>
-    <version>6.1.2</version>
+    <version>6.5.0</version>
     <description>Cordova CLI Java API</description>
     <url>https://github.com/Upplication/cordova-java</url>
     <licenses>
