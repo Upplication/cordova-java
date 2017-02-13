@@ -42,7 +42,7 @@ public class ConfigProcessor implements IConfigProcessor{
      * @param version            Version
      * @param iosCfBundleVersion ios Version, String, optional can be null
      * @param androidVersionCode android Version, Integer, optional can be null
-     * @throws IOException
+     * @throws IOException if the file cant be opened or writted or closed
      */
     public void setVersion(String version, String iosCfBundleVersion, Integer androidVersionCode) throws IOException {
         Document document = openConfig(configFile);
@@ -249,7 +249,7 @@ public class ConfigProcessor implements IConfigProcessor{
      *
      * @param configFile Config file path
      * @param newContent New content for the config file
-     * @throws IOException
+     * @throws IOException if the file cant be saved or closed
      */
     public void saveConfig(Path configFile, Document newContent) throws IOException {
         try (OutputStream out = Files.newOutputStream(configFile, StandardOpenOption.TRUNCATE_EXISTING)) {

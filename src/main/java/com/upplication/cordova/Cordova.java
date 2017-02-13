@@ -13,8 +13,8 @@ public class Cordova {
     /**
      * Create an instance of Cordova setting explicit the nodePath and/or the cordovaPath
      *
-     * @param nodePath
-     * @param cordovaPath
+     * @param nodePath String path to the node bin file
+     * @param cordovaPath String path to the cordova bin file
      */
     public Cordova(String nodePath, String cordovaPath){
 
