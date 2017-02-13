@@ -37,7 +37,7 @@ public class AuthorIT {
         cordova.config().author().setName(name);
 
         assertEquals(name, cordova.config().author().getName());
-        assertThat(new String(Files.readAllBytes(cordova.getProject().toPath().resolve("config.xml"))), containsString("<name>" + name + "</name>"));
+        assertThat(new String(Files.readAllBytes(cordova.getProject().toPath().resolve("config.xml"))), containsString("<author email=\"dev@cordova.apache.org\" href=\"http://cordova.io\">" + name + "</author>"));
     }
 
     @Test
@@ -47,6 +47,7 @@ public class AuthorIT {
         cordova.config().author().setHref(link);
 
         assertEquals(link, cordova.config().author().getHref());
+        assertThat(new String(Files.readAllBytes(cordova.getProject().toPath().resolve("config.xml"))), containsString("<author email=\"dev@cordova.apache.org\" href=\"" + link + "\">"));
     }
 
     @Test
@@ -56,6 +57,7 @@ public class AuthorIT {
         cordova.config().author().setEmail(email);
 
         assertEquals(email, cordova.config().author().getEmail());
+        assertThat(new String(Files.readAllBytes(cordova.getProject().toPath().resolve("config.xml"))), containsString("<author email=\"" + email + "\" href=\"http://cordova.io\">"));
     }
 
     @Test
@@ -76,5 +78,7 @@ public class AuthorIT {
         assertEquals(email, cordova.config().author().getEmail());
         assertEquals(link, cordova.config().author().getHref());
         assertEquals(name, cordova.config().author().getName());
+
+        assertThat(new String(Files.readAllBytes(cordova.getProject().toPath().resolve("config.xml"))), containsString("<author email=\"" + email + "\" href=\"" + link + "\">" + name + "</author>"));
     }
 }
