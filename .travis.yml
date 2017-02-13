@@ -5,16 +5,18 @@ env: JAVA_HOME=$(/usr/libexec/java_home)
 language: java
 before_install:
 - npm install -g cordova@6.5.0
-- wget http://dl.google.com/android/android-sdk_r24.4.1-macosx.zip
-- unzip android-sdk_r24.4.1-macosx.zip
-- export ANDROID_HOME=$PWD/android-sdk-macosx
-- export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-- echo yes | android update sdk --filter platform-tools --no-ui --force > /dev/null
-- echo yes | android update sdk --filter android-23 --no-ui --force > /dev/null
-- echo yes | android update sdk --filter build-tools-23.0.3 --all --no-ui --force > /dev/null
-- echo yes | android update sdk --filter sysimg-23 --no-ui --force > /dev/null
-- echo yes | android update sdk --filter extra-android-support --no-ui --force > /dev/null
-- echo yes | android update sdk --filter extra-android-m2repository --no-ui --force > /dev/null
+- brew install android-sdk
+- wget https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
+- unzip tools_r25.2.3-macosx.zip
+- cp -v -rf $PWD/tools/. /usr/local/opt/android-sdk/tools/.
+- export ANDROID_HOME=/usr/local/opt/android-sdk
+- export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools/bin
+- echo yes | android update sdk -u -a -t 19
+- echo yes | android update sdk -u -a -t 20
+- echo yes | sdkmanager "build-tools;25.0.2"
+- echo yes | sdkmanager "platforms;android-25"
+- echo yes | sdkmanager "tools"
+- echo yes | sdkmanager "platform-tools"
 script: mvn clean install
 after_success:
 - mvn jacoco:report coveralls:report
