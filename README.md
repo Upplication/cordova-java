@@ -13,12 +13,13 @@ Cordova Java Client to automate tasks.
 <dependency>
 	<groupId>com.upplication</groupId>
 	<artifactId>cordova-java</artifactId>
-	<version>6.5.0</version>
+	<version>8.0.0</version>
 </dependency>
 ```
 
 The version 6.1.* works well with cordova 6.1.*
 The version 6.5.* works well with cordova 6.5.*
+The version 8.0.* works well with cordova 8.0.*
 
 ## How to contribute
 
@@ -49,7 +50,6 @@ Thats all, now you can run the test with the command: `mvn test` or/and `mvn tes
 
 * Tests and Integrations test with Travis and Coveralls
 * Full config.xml API implementation
-* Easy version naming: cordova-java 6.1.* works for cordova 6.1.*
 
 
 ## Examples Usages

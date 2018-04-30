@@ -12,6 +12,7 @@ public class BuildAndroidOpts extends BuildOpts {
     private boolean gradle;
     /**
      * will build project with ant
+     * @deprecated
      */
     private boolean ant;
     /**
@@ -62,6 +63,11 @@ public class BuildAndroidOpts extends BuildOpts {
         return ant;
     }
 
+    /**
+     * @deprecated
+     * @param ant
+     * @return
+     */
     public BuildAndroidOpts withAnt(boolean ant) {
         this.ant = ant;
         return this;
@@ -153,10 +159,10 @@ public class BuildAndroidOpts extends BuildOpts {
             androidCommands.add("--gradle");
 
         if (versionCode != null)
-            androidCommands.add("--versionCode=" + versionCode);
+            androidCommands.add("--gradleArg=-PcdvVersionCode=" + versionCode);
 
         if (minSdkVersion != null)
-            androidCommands.add("--minSdkVersion=" + minSdkVersion);
+            androidCommands.add("--gradleArg=-PcdvMinSdkVersion=" + minSdkVersion);
 
         if (keystore != null)
             androidCommands.add("--keystore=" + keystore.getAbsolutePath());

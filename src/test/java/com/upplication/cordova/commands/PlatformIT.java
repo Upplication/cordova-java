@@ -1,8 +1,8 @@
 package com.upplication.cordova.commands;
 
-import com.upplication.cordova.CordovaProject;
-import com.upplication.cordova.Platform;
-import com.upplication.cordova.PlatformResume;
+import com.upplication.cordova.*;
+import com.upplication.cordova.internal.AndroidProject;
+import com.upplication.cordova.internal.XCodeProject;
 import com.upplication.cordova.junit.*;
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
 import static com.upplication.cordova.Platform.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 public class PlatformIT {
     @Rule
@@ -39,8 +39,8 @@ public class PlatformIT {
 
         assertFalse(platformResume.getAvailable().isEmpty());
         assertTrue(platformResume.getInstalled().isEmpty());
-        for (Platform platform : Arrays.asList(IOs, AmazonFireos, Android, Blackberry10, Browser, FirefoxOS, WebOS, OSx)) {
-            assertTrue(platformResume.getAvailable().contains(platform));
+        for (Platform platform : Platform.values()) {
+            assertTrue("Platform: " + platform + " not available as expected", platformResume.getAvailable().contains(platform));
         }
     }
 
@@ -51,8 +51,8 @@ public class PlatformIT {
 
         assertFalse(platformResume.getAvailable().isEmpty());
         assertTrue(platformResume.getInstalled().isEmpty());
-        for (Platform platform : Arrays.asList(AmazonFireos, Android, Blackberry10, Browser, FirefoxOS, WebOS, Windows, WP8)) {
-            assertTrue(platformResume.getAvailable().contains(platform));
+        for (Platform platform : Arrays.asList(Android, Browser, Windows, WWW)) {
+            assertTrue("Platform: " + platform + " not available as expected", platformResume.getAvailable().contains(platform));
         }
     }
 
@@ -95,5 +95,30 @@ public class PlatformIT {
 
         PlatformResume platformResumeFinal = cordova.platform().list();
         assertTrue(platformResumeFinal.getInstalled().isEmpty());
+    }
+
+    @Test
+    public void add_android_create_AndroidProject_structure() {
+
+        cordova.platform().add(Platform.Android);
+
+        AndroidProject androidProject = new AndroidProject(cordova);
+
+        assertThat(Files.exists(androidProject.getAndroidManifest()), is(true));
+        assertThat(Files.exists(androidProject.get()), is(true));
+        assertThat(Files.exists(androidProject.getIcon(IconAndroid.xhdpi.getDensity())), is(true));
+    }
+
+    @Test
+    @Condition(OnlyMacOSX.class)
+    public void add_ios_create_XCodeProject_structure() throws IOException {
+
+        cordova.platform().add(Platform.IOs);
+
+        XCodeProject xCodeProject = new XCodeProject(cordova);
+
+        assertThat(Files.exists(xCodeProject.getInfoPlist()), is(true));
+        assertThat(Files.exists(xCodeProject.get()), is(true));
+        assertThat(Files.exists(xCodeProject.getIcon(IconIos.Icon40.getValue())), is(true));
     }
 }

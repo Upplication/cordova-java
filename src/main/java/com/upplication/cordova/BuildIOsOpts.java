@@ -33,8 +33,12 @@ public class BuildIOsOpts extends BuildOpts {
      */
     private boolean noSign;
 
+    private boolean verbose;
+
     /**
-     * TODO: https://github.com/apache/cordova-ios/blob/b8e855b87045f255c9183c4885fc62d74792f616/bin/templates/scripts/cordova/lib/build.js#44
+     * https://github.com/apache/cordova-ios/blob/master/bin/templates/scripts/cordova/build
+     *
+     * TODO: review
      *
      * cordova build --device --buildFlag="MYSETTING=myvalue" --buildFlag="MY_OTHER_SETTING=othervalue"
      * cordova run --device --buildFlag="DEVELOPMENT_TEAM=FG35JLLMXX4A" --buildFlag="-scheme TestSchemeFlag"
@@ -119,6 +123,12 @@ public class BuildIOsOpts extends BuildOpts {
         return this;
     }
 
+
+    public BuildIOsOpts withVerbose(boolean b) {
+        this.verbose = b;
+        return this;
+    }
+
     @Override
     public List<String> toList() {
         List<String> commands = super.toList();
@@ -138,8 +148,14 @@ public class BuildIOsOpts extends BuildOpts {
         if (packageType != null)
             commands.add("--packageType=" + packageType);
 
+        if (verbose)
+            commands.add("--verbose");
+
         if (noSign)
             commands.add("--noSign");
+
+
+
 
         if (buildFlag != null) {
             for (String flag : buildFlag){

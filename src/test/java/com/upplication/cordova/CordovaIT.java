@@ -1,8 +1,5 @@
 package com.upplication.cordova;
 
-import com.upplication.cordova.junit.Condition;
-import com.upplication.cordova.junit.ConditionRule;
-import com.upplication.cordova.junit.OnlyMacOSX;
 import com.upplication.cordova.util.ConfigTransactionJob;
 import com.upplication.cordova.junit.CordovaCLIRule;
 import org.junit.Before;
@@ -13,8 +10,6 @@ import org.junit.rules.TemporaryFolder;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class CordovaIT {
 
@@ -22,8 +17,6 @@ public class CordovaIT {
     public CordovaCLIRule cordovaCLIRule = new CordovaCLIRule();
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-    @Rule
-    public ConditionRule rule = new ConditionRule();
 
     private CordovaCLI cordovaCLI;
 
@@ -36,35 +29,6 @@ public class CordovaIT {
     //
     // TODO: spike, change to a real integration tests with assert verify etc...
     //
-
-    @Test
-    public void version() throws IOException {
-        String version = cordovaCLI.getVersion();
-        assertNotNull(version);
-        assertEquals("6.5.0", version);
-    }
-
-    @Test
-    public void android() throws IOException {
-        Path project = folder.newFolder("cordova-temp").toPath();
-        CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
-
-        cordovaProject.platform().add(Platform.Android);
-        cordovaProject.prepare();
-        cordovaProject.compile();
-        cordovaProject.build(BuildAndroidOpts.create());
-    }
-
-    @Test
-    @Condition(OnlyMacOSX.class)
-    public void iOS() throws IOException {
-        Path project = folder.newFolder("cordova-temp").toPath();
-        CordovaProject cordovaProject = cordovaCLI.create(project.toFile(), "com.upplication.test", "HelloUpp");
-
-        cordovaProject.platform().add(Platform.IOs);
-        cordovaProject.prepare();
-        cordovaProject.compile();
-    }
 
     @Test
     public void config() throws IOException {

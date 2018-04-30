@@ -109,6 +109,14 @@ public class CordovaCommand {
                     } else {
 
                         String result = output.toString();
+
+                        if (result.contains("CordovaError") || result.contains("UnhandledPromiseRejectionWarning")) {
+                            String msg = "Cordova command failed.\nWorking Directory: " + project +
+                                    ".\nCommands: " + commands +
+                                    ".\nCaused by: " + result;
+                            throw new CordovaCommandException(msg);
+                        }
+
                         logger.info("Command: " + commands + " with result:\n" + result);
 
                         return result;
