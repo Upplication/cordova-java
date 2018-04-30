@@ -89,10 +89,6 @@ public class PluginIT {
         assertEquals("cordova-plugin-console", plugins.get(0).getFullName());
     }
 
-
-    /**
-     * FIXME: this is an internal test...
-     */
     @Test
     public void add_plugin_with_hooks() throws IOException {
 
@@ -105,7 +101,6 @@ public class PluginIT {
         Path googleServices = new AndroidProject(cordova).get().resolve("google-services.json");
 
         assertThat(Files.exists(googleServices), is(false));
-        //assertThat(Files.readAllBytes(googleServices), not(content));
 
         cordova.platform().add(Platform.Android);
         // check hook after_prepare copy
