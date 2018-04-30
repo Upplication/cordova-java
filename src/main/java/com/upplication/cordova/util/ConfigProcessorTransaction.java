@@ -4,14 +4,6 @@ import com.upplication.cordova.*;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +18,7 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     private Path configFile;
     private Document document;
     private ConfigProcessorDocument configProcessorDocument;
+    private DocumentUtil documentUtil;
 
     /**
      * Open the configFile
@@ -34,6 +27,7 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
      */
     public ConfigProcessorTransaction(Path configFile) throws IOException {
         this.configFile = configFile;
+        this.documentUtil = new DocumentUtil();
         this.document = openConfig(configFile);
         this.configProcessorDocument = new ConfigProcessorDocument(document);
     }
@@ -49,11 +43,9 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     private Document openConfig(Path configFile) throws IOException {
         // TODO: http://stackoverflow.com/questions/128038/how-can-i-lock-a-file-using-java-if-possible
         try (InputStream stream = Files.newInputStream(configFile)){
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            return documentBuilder.parse(stream);
+            return documentUtil.newDocumentBuilder().parse(stream);
         }
-        catch (ParserConfigurationException | SAXException e){
+        catch (SAXException e){
             throw new IOException(e);
         }
     }
@@ -65,16 +57,7 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     @Override
     public void close() throws IOException {
         try (OutputStream out = Files.newOutputStream(this.configFile, StandardOpenOption.TRUNCATE_EXISTING)) {
-            TransformerFactory transformerFactory = TransformerFactory
-                    .newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(this.document);
-            StreamResult result = new StreamResult(out);
-
-            transformer.transform(source, result);
-        }
-        catch (TransformerException e){
-            throw new IOException(e);
+            out.write(documentUtil.serializer().writeToString(this.document).getBytes());
         }
     }
 
@@ -186,6 +169,26 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     @Override
     public List<Splash> getSplashs(String platform) throws IOException {
         return configProcessorDocument.getSplashs(platform);
+    }
+
+    @Override
+    public void addEditConfig(String platform, String file, String target, String mode, String content) throws IOException {
+        configProcessorDocument.addEditConfig(platform, file, target, mode, content);
+    }
+
+    @Override
+    public List<EditConfig> getEditConfig(String platform) throws IOException {
+        return configProcessorDocument.getEditConfig(platform);
+    }
+
+    @Override
+    public void addConfigFile(String platform, String target, String parent, String after, String content) throws IOException {
+        configProcessorDocument.addConfigFile(platform, target, parent, after, content);
+    }
+
+    @Override
+    public List<ConfigFile> getConfigFile(String platform) throws IOException {
+        return configProcessorDocument.getConfigFile(platform);
     }
 
     @Override

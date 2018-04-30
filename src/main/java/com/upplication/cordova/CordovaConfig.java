@@ -18,6 +18,8 @@ public class CordovaConfig {
     private AllowNavigationConfig allowNavigationConfig;
     private PreferencesConfig preferencesConfig;
     private AuthorConfig authorConfig;
+    private EditConfigConfig editConfigConfig;
+    private ConfigFileConfig configFileConfig;
 
     private IconConfig iconConfigBase;
 
@@ -31,6 +33,8 @@ public class CordovaConfig {
         this.preferencesConfig = new PreferencesConfig(configProcessor, null);
         this.authorConfig = new AuthorConfig(configProcessor);
         this.iconConfigBase = new IconConfig(configProcessor, null);
+        this.editConfigConfig = new EditConfigConfig(configProcessor, null);
+        this.configFileConfig = new ConfigFileConfig(configProcessor, null);
     }
 
     public void setName(String name) throws IOException {
@@ -84,6 +88,14 @@ public class CordovaConfig {
 
     public IconConfig icon(){
         return iconConfigBase;
+    }
+
+    public EditConfigConfig editConfig(){
+        return editConfigConfig;
+    }
+
+    public ConfigFileConfig configFile(){
+        return configFileConfig;
     }
 
     public PlatformConfig platform(Platform platform){

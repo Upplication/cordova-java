@@ -145,6 +145,8 @@ public class CustomTagIT {
         try (java.io.InputStream sbis = Files.newInputStream(file)) {
             DocumentBuilderFactory b = DocumentBuilderFactory.newInstance();
             b.setNamespaceAware(false);
+            b.setXIncludeAware(false);
+            b.setValidating(false);
             Document doc = b.newDocumentBuilder().parse(sbis);
             NodeList nodeList = doc.getElementsByTagName(tag);
             Element element = (Element)nodeList.item(0);

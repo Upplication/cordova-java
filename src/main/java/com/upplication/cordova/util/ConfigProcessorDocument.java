@@ -5,24 +5,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.Closeable;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +25,8 @@ public class ConfigProcessorDocument {
     private static final String accessNodeName = "access";
     private static final String allowNavigationNode = "allow-navigation";
     private static final String preferenceNodeName = "preference";
+    private static final String editConfigNodeName = "edit-config";
+    private static final String configFileNodeName = "config-file";
 
     private static final String authorEmailAttrName = "email";
     private static final String authorHrefAttrName = "href";
@@ -45,9 +34,11 @@ public class ConfigProcessorDocument {
 
 
     private Document document;
+    private DocumentUtil documentUtil;
 
     public ConfigProcessorDocument(Document document) {
         this.document = document;
+        this.documentUtil = new DocumentUtil();
     }
 
     /**
@@ -323,6 +314,115 @@ public class ConfigProcessorDocument {
     }
 
     /**
+     * Add a new edit-config element in the concrete platform (or general if null)
+     *
+     * @param platform String platform: ios, android ...
+     * @param file String The file to be modified, and the path relative to the root of the Cordova project.
+     * @param target String An XPath selector referencing the target element to make attribute modifications to
+     * @param mode String The mode that determines what type of attribute modifications will be made.
+     * @param content String The XML to edit
+     */
+    public void addEditConfig(String platform, String file, String target, String mode, String content) {
+        Element parent = getPlatformElement(platform);
+
+        Element editConfigElement = document.createElement(editConfigNodeName);
+        editConfigElement.setAttribute("file", file);
+        editConfigElement.setAttribute("target", target);
+        editConfigElement.setAttribute("mode", mode);
+        // add content, must be a valid xml content
+        add(content, editConfigElement);
+
+        parent.appendChild(editConfigElement);
+    }
+
+    /**
+     * Get the list of edit-config allowed in the config.xml for a concrete platform
+     *
+     * @param platform String platform to find
+     * @return List EditConfig never null
+     */
+    public List<EditConfig> getEditConfig(String platform) {
+        List<EditConfig> result = new ArrayList<>();
+        Element parent = getPlatformElement(platform);
+
+        if (parent == null) {
+            return result;
+        }
+
+        NodeList nodeList = parent.getElementsByTagName(editConfigNodeName);
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+            if (node.getParentNode().equals(parent)){
+                Element element = (Element)node;
+                EditConfig editConfig = EditConfig.create()
+                        .file(element.getAttribute("file"))
+                        .mode(element.getAttribute("mode"))
+                        .target(element.getAttribute("target"))
+                        .content(innerXml(element));
+                result.add(editConfig);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Add a new config-file element in the concrete platform (or general if null)
+     *
+     * @param platform String platform: ios, android ...
+     * @param target String The file to be modified, and the path relative to the root of the Cordova project. If the specified file does not exist, the tool ignores the configuration change and continues installation.
+     * @param parent String An XPath selector referencing the parent of the elements to be added to the config file. If you use absolute selectors, you can use a wildcard (*) to specify the root element
+     * @param after String A prioritized list of accepted siblings after which to add the XML snippet.
+     * @param content String The XML to add
+     */
+    public void addConfigFile(String platform, String target, String parent, String after, String content) {
+        Element parentElement = getPlatformElement(platform);
+
+        Element configFileElement = document.createElement(configFileNodeName);
+        configFileElement.setAttribute("target", target);
+        configFileElement.setAttribute("parent", parent);
+        if (after != null)
+            configFileElement.setAttribute("after", after);
+        // add content, must be a valid xml content
+        add(content, configFileElement);
+
+        parentElement.appendChild(configFileElement);
+    }
+
+    /**
+     * Get the list of config-file allowed in the config.xml for a concrete platform
+     *
+     * @param platform String platform to find
+     * @return List EditConfig never null
+     */
+    public List<ConfigFile> getConfigFile(String platform) {
+        List<ConfigFile> result = new ArrayList<>();
+        Element parent = getPlatformElement(platform);
+
+        if (parent == null) {
+            return result;
+        }
+
+        NodeList nodeList = parent.getElementsByTagName(configFileNodeName);
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+            if (node.getParentNode().equals(parent)){
+                Element element = (Element)node;
+                ConfigFile configFile = ConfigFile.create()
+                        .target(element.getAttribute("target"))
+                        .parent(element.getAttribute("parent"))
+                        .after(getAttribute(element, "after"))
+                        .content(innerXml(element));
+                result.add(configFile);
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Add a new icon element in the concrete platform with a src, width, height and a density
      *
      * @param platform String platform: ios, android ...
@@ -451,20 +551,28 @@ public class ConfigProcessorDocument {
      * @throws IllegalArgumentException if the tag is not valid tag
      */
     public void add(String tag) {
+        Element widget = (Element) this.document.getElementsByTagName(widgetNodeName).item(0);
+        add(tag, widget);
+    }
 
+    /**
+     * Add a custom valid XML to the parent Element
+     * @param tag String never null
+     * @param parent Element to append never null
+     *
+     * @throws IllegalArgumentException if the tag is not valid tag
+     */
+    private void add(String tag, Element parent) {
         Element elem;
         try (java.io.InputStream sbis = new java.io.ByteArrayInputStream(tag.getBytes(StandardCharsets.UTF_8))) {
-            DocumentBuilderFactory b = DocumentBuilderFactory.newInstance();
-            b.setNamespaceAware(false);
-            elem = b.newDocumentBuilder().parse(sbis).getDocumentElement();
+            elem = documentUtil.newDocumentBuilder().parse(sbis).getDocumentElement();
         }
-        catch (IOException | ParserConfigurationException | SAXException e) {
+        catch (IOException | SAXException e) {
             throw new IllegalArgumentException("Xml element: " + tag + " is not a valid xml fragment", e);
         }
 
         Node node = this.document.importNode(elem, true);
-        Element widget = (Element) this.document.getElementsByTagName(widgetNodeName).item(0);
-        widget.appendChild(node);
+        parent.appendChild(node);
     }
 
     /**
@@ -523,7 +631,8 @@ public class ConfigProcessorDocument {
     }
 
     /**
-     * Try to find the platform node of the document
+     * Try to find the platform node of the document.
+     * If platform is null, then return the widget element.
      *
      * @param platform String platform for ios, android....
      * @return Element or null if not exists
@@ -546,5 +655,34 @@ public class ConfigProcessorDocument {
         return parent;
     }
 
+    /**
+     * Get the innerXML of a node without the Node itself.
+     *
+     * @param node Node with child nodes
+     * @return if no child nodes then return empty string
+     */
+    private String innerXml(Node node) {
+        LSSerializer lsSerializer = documentUtil.serializer();
+        NodeList nodes = node.getChildNodes();
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i < nodes.getLength(); i++) {
+            Node nodeChild = nodes.item(i);
+            sb.append(lsSerializer.writeToString(nodeChild));
+        }
+        return sb.toString();
+    }
 
+    /**
+     * Like Element#getAttribute(String) but return null if empty
+     * @see Element#getAttribute(String)
+     * @param node
+     * @param attrName
+     * @return
+     */
+    private String getAttribute(Element node, String attrName) {
+        if (!node.hasAttribute(attrName)) {
+            return null;
+        }
+        return node.getAttribute(attrName);
+    }
 }

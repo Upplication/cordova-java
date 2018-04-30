@@ -1,26 +1,7 @@
 package com.upplication.cordova.util;
 
 import com.upplication.cordova.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -221,6 +202,47 @@ public interface IConfigProcessor {
     List<Splash> getSplashs(String platform) throws IOException;
 
 
+    /**
+     * Add a new edit-config element in the concrete platform (or general if null)
+     *
+     * @param platform String platform: ios, android ...
+     * @param file String The file to be modified, and the path relative to the root of the Cordova project.
+     * @param target String An XPath selector referencing the target element to make attribute modifications to
+     * @param mode String The mode that determines what type of attribute modifications will be made.
+     * @param content String The XML to edit
+     * @throws IOException if the content is not a valid XML and cant be saved
+     */
+    void addEditConfig(String platform, String file, String target, String mode, String content) throws IOException;
+
+    /**
+     * Get the list of edit-config allowed in the config.xml for a concrete platform
+     *
+     * @param platform String platform to find
+     * @return List EditConfig never null
+     * @throws IOException if the list of edit-config element cant be retrieved
+     */
+    List<EditConfig> getEditConfig(String platform) throws IOException;
+
+    /**
+     * Add a new config-file element in the concrete platform (or general if null)
+     *
+     * @param platform String platform: ios, android ...
+     * @param target String The file to be modified, and the path relative to the root of the Cordova project. If the specified file does not exist, the tool ignores the configuration change and continues installation.
+     * @param parent String An XPath selector referencing the parent of the elements to be added to the config file. If you use absolute selectors, you can use a wildcard (*) to specify the root element
+     * @param after String A prioritized list of accepted siblings after which to add the XML snippet.
+     * @param content String The XML to add
+     * @throws IOException if the content is not a valid XML and cant be saved
+     */
+    void addConfigFile(String platform, String target, String parent, String after, String content) throws IOException;
+
+    /**
+     * Get the list of config-file allowed in the config.xml for a concrete platform
+     *
+     * @param platform String platform to find
+     * @return List EditConfig never null
+     * @throws IOException if the list of config-file element cant be retrieved
+     */
+    List<ConfigFile> getConfigFile(String platform) throws IOException;
     /**
      * Add some custom fragments of XML tag.
      * Some plugins add their custom tags to the config.xml so we need to support custom fragments.

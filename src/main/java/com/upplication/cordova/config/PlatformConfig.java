@@ -1,10 +1,7 @@
 package com.upplication.cordova.config;
 
 import com.upplication.cordova.Platform;
-import com.upplication.cordova.util.ConfigProcessor;
 import com.upplication.cordova.util.IConfigProcessor;
-
-import java.nio.file.Path;
 
 /**
  * customize platform for the config.xml
@@ -15,11 +12,13 @@ public class PlatformConfig {
     private IconConfig iconConfig;
     private SplashConfig splashConfig;
     private PreferencesConfig preferencesConfig;
+    private EditConfigConfig editConfigConfig;
 
     public PlatformConfig(Platform platform, IConfigProcessor configProcessor) {
         this.iconConfig = new IconConfig(configProcessor, platform);
         this.splashConfig =  new SplashConfig(configProcessor, platform);
         this.preferencesConfig = new PreferencesConfig(configProcessor, platform);
+        this.editConfigConfig = new EditConfigConfig(configProcessor, platform);
     }
 
     public IconConfig icon() {
@@ -32,5 +31,9 @@ public class PlatformConfig {
 
     public PreferencesConfig preference() {
         return preferencesConfig;
+    }
+
+    public EditConfigConfig editConfig() {
+        return editConfigConfig;
     }
 }

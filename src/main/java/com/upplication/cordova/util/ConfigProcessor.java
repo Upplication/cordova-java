@@ -2,28 +2,16 @@ package com.upplication.cordova.util;
 
 import com.upplication.cordova.*;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Processes the cordova config.xml file
@@ -32,8 +20,11 @@ public class ConfigProcessor implements IConfigProcessor{
 
     private Path configFile;
 
+    private DocumentUtil documentUtil;
+
     public ConfigProcessor(Path config) {
         this.configFile = config;
+        this.documentUtil = new DocumentUtil();
     }
 
     /**
@@ -222,6 +213,38 @@ public class ConfigProcessor implements IConfigProcessor{
     }
 
     @Override
+    public void addEditConfig(String platform, String file, String target, String mode, String content) throws IOException {
+        Document document = openConfig(configFile);
+
+        getProcessor(document).addEditConfig(platform, file, target, mode, content);
+
+        saveConfig(configFile, document);
+    }
+
+    @Override
+    public List<EditConfig> getEditConfig(String platform) throws IOException {
+        Document document = openConfig(configFile);
+
+        return getProcessor(document).getEditConfig(platform);
+    }
+
+    @Override
+    public void addConfigFile(String platform, String target, String parent, String after, String content) throws IOException {
+        Document document = openConfig(configFile);
+
+        getProcessor(document).addConfigFile(platform, target, parent, after, content);
+
+        saveConfig(configFile, document);
+    }
+
+    @Override
+    public List<ConfigFile> getConfigFile(String platform) throws IOException {
+        Document document = openConfig(configFile);
+
+        return getProcessor(document).getConfigFile(platform);
+    }
+
+    @Override
     public void add(String xml) throws IOException {
         Document document = openConfig(configFile);
         getProcessor(document).add(xml);
@@ -235,11 +258,9 @@ public class ConfigProcessor implements IConfigProcessor{
 
     public Document openConfig(Path configFile) throws IOException {
         try (InputStream stream = Files.newInputStream(configFile)){
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            return documentBuilder.parse(stream);
+            return documentUtil.newDocumentBuilder().parse(stream);
         }
-        catch (ParserConfigurationException | SAXException e){
+        catch (SAXException e){
             throw new IOException(e);
         }
     }
@@ -253,15 +274,7 @@ public class ConfigProcessor implements IConfigProcessor{
      */
     public void saveConfig(Path configFile, Document newContent) throws IOException {
         try (OutputStream out = Files.newOutputStream(configFile, StandardOpenOption.TRUNCATE_EXISTING)) {
-            TransformerFactory transformerFactory = TransformerFactory
-                    .newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(newContent);
-            StreamResult result = new StreamResult(out);
-            transformer.transform(source, result);
-        }
-        catch (TransformerException e){
-            throw new IOException(e);
+            out.write(documentUtil.serializer().writeToString(newContent).getBytes());
         }
     }
 
