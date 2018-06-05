@@ -6,7 +6,7 @@
     <name>Cordova Java</name>
     <groupId>com.upplication</groupId>
     <artifactId>cordova-java</artifactId>
-    <version>8.0.0</version>
+    <version>8.0.1</version>
     <description>Cordova CLI Java API</description>
     <url>https://github.com/Upplication/cordova-java</url>
     <licenses>
@@ -32,11 +32,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.org.slf4j.slf4j-api>1.6.1</version.org.slf4j.slf4j-api>
+        <version.org.slf4j.slf4j-api>1.7.25</version.org.slf4j.slf4j-api>
         <version.junit.junit>4.12</version.junit.junit>
-        <version.org.slf4j.slf4j-log4j12>1.6.1</version.org.slf4j.slf4j-log4j12>
-        <version.com.github.marschall.memoryfilesystem>0.9.0</version.com.github.marschall.memoryfilesystem>
-        <version.org.mockito.mockito-core>2.2.21</version.org.mockito.mockito-core>
+        <version.org.slf4j.slf4j-log4j12>1.7.25</version.org.slf4j.slf4j-log4j12>
+        <version.com.github.marschall.memoryfilesystem>1.2.1</version.com.github.marschall.memoryfilesystem>
+        <version.org.mockito.mockito-core>2.18.3</version.org.mockito.mockito-core>
     </properties>
 
 
