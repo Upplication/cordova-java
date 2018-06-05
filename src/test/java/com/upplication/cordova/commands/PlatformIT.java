@@ -110,6 +110,28 @@ public class PlatformIT {
     }
 
     @Test
+    public void add_android_with_version_create_AndroidProject_structure() {
+
+        cordova.platform().add(Platform.Android("7.1.0"));
+
+        AndroidProject androidProject = new AndroidProject(cordova);
+
+        assertThat(Files.exists(androidProject.getAndroidManifest()), is(true));
+        assertThat(Files.exists(androidProject.get()), is(true));
+    }
+
+    @Test
+    public void add_android_from_git_repo_create_AndroidProject_structure() {
+
+        cordova.platform().add("https://github.com/apache/cordova-android#7.1.0");
+
+        AndroidProject androidProject = new AndroidProject(cordova);
+
+        assertThat(Files.exists(androidProject.getAndroidManifest()), is(true));
+        assertThat(Files.exists(androidProject.get()), is(true));
+    }
+
+    @Test
     @Condition(OnlyMacOSX.class)
     public void add_ios_create_XCodeProject_structure() throws IOException {
 

@@ -55,7 +55,7 @@ public class CordovaProject {
     }
 
     public void prepare(Platform platform) {
-        cordovaCommand.exec("prepare", platform.name().toLowerCase());
+        cordovaCommand.exec("prepare", platform.getName().toLowerCase());
     }
 
     public void compile() {
@@ -63,15 +63,15 @@ public class CordovaProject {
     }
 
     public void compile(Platform platform) {
-        cordovaCommand.exec("compile", platform.name().toLowerCase());
+        cordovaCommand.exec("compile", platform.getName().toLowerCase());
     }
 
     public void emulate(Platform platform) {
-        cordovaCommand.exec("emulate", platform.name().toLowerCase());
+        cordovaCommand.exec("emulate", platform.getName().toLowerCase());
     }
 
     public void run(Platform platform) {
-        cordovaCommand.exec("run", platform.name().toLowerCase());
+        cordovaCommand.exec("run", platform.getName().toLowerCase());
     }
 
     public CordovaPlatform platform() {

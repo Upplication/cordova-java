@@ -43,7 +43,7 @@ public class IconConfig {
 
     private String getPlatform() {
         if (platform != null) {
-            return platform.name().toLowerCase();
+            return platform.getName().toLowerCase();
         } else {
             return null;
         }

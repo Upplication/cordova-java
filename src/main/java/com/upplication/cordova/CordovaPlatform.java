@@ -46,10 +46,15 @@ public class CordovaPlatform {
     }
 
     public void add(Platform platform){
-        cordovaCommand.exec("platform", "add", platform.name().toLowerCase());
+        String command = platform.getName().toLowerCase() + (platform.getVersion() != null ? "@" + platform.getVersion() : "");
+        this.add(command);
+    }
+
+    public void add(String platform){
+        cordovaCommand.exec("platform", "add", platform);
     }
 
     public void remove(Platform platform){
-        cordovaCommand.exec("platform", "remove", platform.name().toLowerCase());
+        cordovaCommand.exec("platform", "remove", platform.getName().toLowerCase());
     }
 }

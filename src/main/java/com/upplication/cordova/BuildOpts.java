@@ -109,7 +109,7 @@ public class BuildOpts {
 
         if (platforms != null) {
             for (Platform platform : platforms) {
-                commands.add(platform.name().toLowerCase());
+                commands.add(platform.getName().toLowerCase());
             }
         }
 
