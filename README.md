@@ -13,7 +13,7 @@ Cordova Java Client to automate tasks.
 <dependency>
 	<groupId>com.upplication</groupId>
 	<artifactId>cordova-java</artifactId>
-	<version>8.0.1</version>
+	<version>8.0.2</version>
 </dependency>
 ```
 
