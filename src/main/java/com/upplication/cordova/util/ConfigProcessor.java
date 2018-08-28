@@ -245,6 +245,22 @@ public class ConfigProcessor implements IConfigProcessor{
     }
 
     @Override
+    public void addResourceFile(String platform, String src, String target) throws IOException {
+        Document document = openConfig(configFile);
+
+        getProcessor(document).addResourceFile(platform, src, target);
+
+        saveConfig(configFile, document);
+    }
+
+    @Override
+    public List<ResourceFile> getResourceFile(String platform) throws IOException {
+        Document document = openConfig(configFile);
+
+        return getProcessor(document).getResourceFile(platform);
+    }
+
+    @Override
     public void add(String xml) throws IOException {
         Document document = openConfig(configFile);
         getProcessor(document).add(xml);

@@ -215,6 +215,25 @@ public interface IConfigProcessor {
     void addEditConfig(String platform, String file, String target, String mode, String content) throws IOException;
 
     /**
+     * Get the list of resource-file added in the config.xml for a concrete platform
+     *
+     * @param platform String platform to find
+     * @return List ResourceFile never null
+     * @throws IOException if the list of resource-file element cant be retrieved
+     */
+    List<ResourceFile> getResourceFile(String platform) throws IOException;
+
+    /**
+     * Add a new resource-file element in the concrete platform (or general if null)
+     *
+     * @param platform String platform: ios, android ...
+     * @param src String The file to be added, and the path relative to the root of the Cordova project.
+     * @param target String An XPath selector referencing the target element to make attribute modifications to
+     * @throws IOException if the content is not a valid XML and cant be saved
+     */
+    void addResourceFile(String platform, String src, String target) throws IOException;
+
+    /**
      * Get the list of edit-config allowed in the config.xml for a concrete platform
      *
      * @param platform String platform to find

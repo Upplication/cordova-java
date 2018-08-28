@@ -112,7 +112,7 @@ public class PlatformIT {
     @Test
     public void add_android_with_version_create_AndroidProject_structure() {
 
-        cordova.platform().add(Platform.Android("7.1.0"));
+        cordova.platform().add(Platform.Android("7.1.*"));
 
         AndroidProject androidProject = new AndroidProject(cordova);
 

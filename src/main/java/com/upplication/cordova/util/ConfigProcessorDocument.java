@@ -27,6 +27,7 @@ public class ConfigProcessorDocument {
     private static final String preferenceNodeName = "preference";
     private static final String editConfigNodeName = "edit-config";
     private static final String configFileNodeName = "config-file";
+    private static final String resourceFileNodeName = "resource-file";
 
     private static final String authorEmailAttrName = "email";
     private static final String authorHrefAttrName = "href";
@@ -416,6 +417,55 @@ public class ConfigProcessorDocument {
                         .after(getAttribute(element, "after"))
                         .content(innerXml(element));
                 result.add(configFile);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Add a new resource-file element in the concrete platform (or general if null)
+     *
+     * @param platform String platform: ios, android ...
+     * @param src String The file to be added with the Path relative to the cordova project
+     * @param target String, optional, the relative path to the cordova project to add the file
+     */
+    public void addResourceFile(String platform, String src, String target) {
+        Element parent = getPlatformElement(platform);
+
+        Element editConfigElement = document.createElement(resourceFileNodeName);
+        editConfigElement.setAttribute("src", src);
+        if (target != null) {
+            editConfigElement.setAttribute("target", target);
+        }
+        parent.appendChild(editConfigElement);
+    }
+
+    /**
+     * Get the list of resource-file allowed in the config.xml for a concrete platform
+     *
+     * @param platform String platform to find
+     * @return List ResourceFile never null
+     */
+    public List<ResourceFile> getResourceFile(String platform) {
+        List<ResourceFile> result = new ArrayList<>();
+        Element parent = getPlatformElement(platform);
+
+        if (parent == null) {
+            return result;
+        }
+
+        NodeList nodeList = parent.getElementsByTagName(resourceFileNodeName);
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+            if (node.getParentNode().equals(parent)){
+                Element element = (Element)node;
+                ResourceFile editConfig = ResourceFile
+                        .create(element.getAttribute("src"))
+                        .target(element.getAttribute("target"));
+
+                result.add(editConfig);
             }
         }
 

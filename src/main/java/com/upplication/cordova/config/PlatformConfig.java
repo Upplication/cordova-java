@@ -13,12 +13,14 @@ public class PlatformConfig {
     private SplashConfig splashConfig;
     private PreferencesConfig preferencesConfig;
     private EditConfigConfig editConfigConfig;
+    private ResourceFileConfig resourceFileConfig;
 
     public PlatformConfig(Platform platform, IConfigProcessor configProcessor) {
         this.iconConfig = new IconConfig(configProcessor, platform);
         this.splashConfig =  new SplashConfig(configProcessor, platform);
         this.preferencesConfig = new PreferencesConfig(configProcessor, platform);
         this.editConfigConfig = new EditConfigConfig(configProcessor, platform);
+        this.resourceFileConfig = new ResourceFileConfig(configProcessor, platform);
     }
 
     public IconConfig icon() {
@@ -35,5 +37,9 @@ public class PlatformConfig {
 
     public EditConfigConfig editConfig() {
         return editConfigConfig;
+    }
+
+    public ResourceFileConfig resourceFile() {
+        return resourceFileConfig;
     }
 }

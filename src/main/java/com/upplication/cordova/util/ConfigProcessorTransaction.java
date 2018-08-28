@@ -192,6 +192,16 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     }
 
     @Override
+    public void addResourceFile(String platform, String src, String target) throws IOException {
+        configProcessorDocument.addResourceFile(platform, src, target);
+    }
+
+    @Override
+    public List<ResourceFile> getResourceFile(String platform) throws IOException {
+        return configProcessorDocument.getResourceFile(platform);
+    }
+
+    @Override
     public void add(String xml) throws IOException {
         configProcessorDocument.add(xml);
     }
