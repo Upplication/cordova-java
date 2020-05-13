@@ -152,6 +152,16 @@ public class ConfigProcessorTransaction implements Closeable, IConfigProcessor {
     }
 
     @Override
+    public void addFeature(String platform, String name, Feature.Param... params) throws IOException {
+        configProcessorDocument.addFeature(platform, name, params);
+    }
+
+    @Override
+    public List<Feature> getFeatures(String platform) throws IOException {
+        return configProcessorDocument.getFeatures(platform);
+    }
+
+    @Override
     public void addIcon(String platform, String src, Integer width, Integer height, String density) throws IOException {
         configProcessorDocument.addIcon(platform, src, width, height, density);
     }

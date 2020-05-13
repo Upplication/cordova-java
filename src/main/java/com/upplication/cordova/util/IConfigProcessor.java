@@ -144,20 +144,42 @@ public interface IConfigProcessor {
     /**
      * Add a new preference element in the concrete platform with a name and a value attrs
      *
-     * @param platform String platform: ios, android ...
+     * @param platform String platform: ios, android ... If null the preference is added in the widget element
      * @param name String attr name
      * @param value String attr value
      * @throws IOException if the operation cant be performed
      */
     void addPreference(String platform, String name, String value) throws IOException;
+
     /**
      * Get the list of preferences allowed in the config.xml for a concrete platform
+     * or for the widget element if platform is null
      *
-     * @param platform String with the platform to filter against it
+     * @param platform String with the platform to filter against it, can be null
      * @return List Preference never null
      * @throws IOException if the list of preference cant be retrieved
      */
     List<Preference> getPreferences(String platform) throws IOException;
+
+    /**
+     * Add a new preference element in the concrete platform with a name and a value attrs
+     *
+     * @param platform String platform: ios, android ... If null the preference is added in the widget element
+     * @param name String attr name, mandatory
+     * @param params Array of Params with name and value mandatory
+     * @throws IOException if the operation cant be performed
+     */
+    void addFeature(String platform, String name, Feature.Param ... params) throws IOException;
+
+    /**
+     * Get the list of features allowed in the config.xml for a concrete platform or
+     * for the widget element if platform is null
+     *
+     * @param platform String with the platform to filter against it, can be null
+     * @return List Feature with params never null
+     * @throws IOException if the list of feature cant be retrieved
+     */
+    List<Feature> getFeatures(String platform) throws IOException;
 
     /**
      * Add a new icon element in the concrete platform with a src, width, height and a density

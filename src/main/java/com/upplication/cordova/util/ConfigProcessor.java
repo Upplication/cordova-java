@@ -182,6 +182,21 @@ public class ConfigProcessor implements IConfigProcessor{
     }
 
     @Override
+    public void addFeature(String platform, String name, Feature.Param... params) throws IOException {
+        Document document = openConfig(configFile);
+
+        getProcessor(document).addFeature(platform, name, params);
+
+        saveConfig(configFile, document);
+    }
+
+    @Override
+    public List<Feature> getFeatures(String platform) throws IOException {
+        Document document = openConfig(configFile);
+        return getProcessor(document).getFeatures(platform);
+    }
+
+    @Override
     public void addIcon(String platform, String src, Integer width, Integer height, String density) throws IOException {
         Document document = openConfig(configFile);
 
@@ -295,7 +310,7 @@ public class ConfigProcessor implements IConfigProcessor{
     }
 
     //
-    public ConfigProcessorDocument getProcessor(Document document) throws IOException {
+    public ConfigProcessorDocument getProcessor(Document document) {
         return new ConfigProcessorDocument(document);
     }
 }

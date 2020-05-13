@@ -17,6 +17,7 @@ public class CordovaConfig {
     private AccessConfig accessConfig;
     private AllowNavigationConfig allowNavigationConfig;
     private PreferencesConfig preferencesConfig;
+    private FeaturesConfig featuresConfig;
     private AuthorConfig authorConfig;
     private EditConfigConfig editConfigConfig;
     private ConfigFileConfig configFileConfig;
@@ -31,6 +32,7 @@ public class CordovaConfig {
         this.accessConfig = new AccessConfig(configProcessor);
         this.allowNavigationConfig = new AllowNavigationConfig(configProcessor);
         this.preferencesConfig = new PreferencesConfig(configProcessor, null);
+        this.featuresConfig = new FeaturesConfig(configProcessor, null);
         this.authorConfig = new AuthorConfig(configProcessor);
         this.iconConfigBase = new IconConfig(configProcessor, null);
         this.editConfigConfig = new EditConfigConfig(configProcessor, null);
@@ -84,6 +86,10 @@ public class CordovaConfig {
 
     public PreferencesConfig preferences() {
         return preferencesConfig;
+    }
+
+    public FeaturesConfig features() {
+        return featuresConfig;
     }
 
     public IconConfig icon(){

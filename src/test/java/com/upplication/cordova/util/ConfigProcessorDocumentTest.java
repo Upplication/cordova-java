@@ -27,7 +27,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_name_then_name_node_is_changed() throws IOException {
+    public void when_set_name_then_name_node_is_changed() {
 
         String name = "app name cool";
 
@@ -45,7 +45,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_version_then_attr_version_is_changed() throws Exception {
+    public void when_set_version_then_attr_version_is_changed() {
 
         String version = "2.0.0";
 
@@ -63,7 +63,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_version_ios_then_attr_version_ios_is_changed() throws Exception {
+    public void when_set_version_ios_then_attr_version_ios_is_changed() {
 
         String version = "2.0.0";
 
@@ -81,7 +81,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_version_android_then_attr_version_android_is_changed() throws Exception {
+    public void when_set_version_android_then_attr_version_android_is_changed() {
 
         String version = "2.0.0";
         Integer versionAndroid = 2;
@@ -100,7 +100,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_author_email_then_author_email_is_changed() throws Exception {
+    public void when_set_author_email_then_author_email_is_changed() {
 
         String email = "email@email.com";
 
@@ -118,7 +118,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_author_name_then_author_content_is_changed() throws Exception {
+    public void when_set_author_name_then_author_content_is_changed() {
 
         String authorName = "Upplication Software";
 
@@ -136,7 +136,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_author_href_then_href_attr_is_changed() throws Exception {
+    public void when_set_author_href_then_href_attr_is_changed() {
 
         String authorHref = "upplication.com";
 
@@ -154,7 +154,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_description_then_description_node_content_is_changed() throws Exception {
+    public void when_set_description_then_description_node_content_is_changed() {
 
         String description = "description";
 
@@ -172,7 +172,7 @@ public class ConfigProcessorDocumentTest {
     }
 
     @Test
-    public void when_set_allowNavigation_then_allowNavigation_node_is_added() throws Exception {
+    public void when_set_allowNavigation_then_allowNavigation_node_is_added() {
 
         String href = "*";
 

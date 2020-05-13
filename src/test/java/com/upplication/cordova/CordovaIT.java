@@ -54,6 +54,7 @@ public class CordovaIT {
         cordovaProject.config().platform(Platform.Android).icon().add(Icon.create().src("src/hola.png").width(100).height(300));
 
         cordovaProject.config().platform(Platform.Android).preference().add("android-pref", "pref");
+        cordovaProject.config().platform(Platform.Android).feature().add("test", Feature.Param.create("name", "value"));
 
         System.out.println(project);
 
@@ -70,6 +71,7 @@ public class CordovaIT {
         System.out.println(cordovaProject.config().platform(Platform.Android).icon().getAll());
         System.out.println(cordovaProject.config().platform(Platform.Android).splash().getAll());
         System.out.println(cordovaProject.config().platform(Platform.Android).preference().getAll());
+        System.out.println(cordovaProject.config().platform(Platform.Android).feature().getAll());
     }
 
     @Test
@@ -97,6 +99,7 @@ public class CordovaIT {
                 config.platform(Platform.Android).icon().add(Icon.create().src("src/hola.png").width(100).height(300));
 
                 config.platform(Platform.Android).preference().add("android-pref", "pref");
+                config.platform(Platform.Android).feature().add("test", Feature.Param.create("name", "value"));
 
 
                 System.out.println(config.getDescription());
@@ -111,6 +114,7 @@ public class CordovaIT {
                 System.out.println(config.platform(Platform.Android).icon().getAll());
                 System.out.println(config.platform(Platform.Android).splash().getAll());
                 System.out.println(config.platform(Platform.Android).preference().getAll());
+                System.out.println(config.platform(Platform.Android).feature().getAll());
             }
         });
 

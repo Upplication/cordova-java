@@ -25,6 +25,7 @@ public class ConfigProcessorDocument {
     private static final String accessNodeName = "access";
     private static final String allowNavigationNode = "allow-navigation";
     private static final String preferenceNodeName = "preference";
+    private static final String featureNodeName = "feature";
     private static final String editConfigNodeName = "edit-config";
     private static final String configFileNodeName = "config-file";
     private static final String resourceFileNodeName = "resource-file";
@@ -269,7 +270,7 @@ public class ConfigProcessorDocument {
     /**
      * Add a new preference element in the concrete platform with a name and a value attrs
      *
-     * @param platform String platform: ios, android ...
+     * @param platform String platform: ios, android ... can be null
      * @param name String attr name
      * @param value String attr value
      */
@@ -307,6 +308,69 @@ public class ConfigProcessorDocument {
                 Preference access = Preference.create()
                         .name(element.getAttribute("name"))
                         .value(element.getAttribute("value"));
+                result.add(access);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Add a new feature element with a name and the params values in the concrete platform
+     * or in the widget element if the platform is null
+     *
+     * @param platform String platform: ios, android ... can be null
+     * @param name String attr name, mandatory
+     * @param values Feature.Param parameters, mandatory
+     */
+    public void addFeature(String platform, String name, Feature.Param ... values) {
+        Element parent = getPlatformElement(platform);
+
+        Element featureElement = document.createElement(featureNodeName);
+        featureElement.setAttribute("name", name);
+        parent.appendChild(featureElement);
+
+        for (Feature.Param param : values) {
+            Element paramElement = document.createElement("param");
+
+            paramElement.setAttribute("name", param.getName());
+            paramElement.setAttribute("value", param.getValue());
+
+            featureElement.appendChild(paramElement);
+        }
+    }
+
+    /**
+     * Get the list of feature allowed in the config.xml for a concrete platform or for the widget
+     * if the platform is null
+     *
+     * @param platform String platform to find, can be null.
+     * @return List Preference never null
+     */
+    public List<Feature> getFeatures(String platform) {
+        List<Feature> result = new ArrayList<>();
+        Element parent = getPlatformElement(platform);
+
+        if (parent == null) {
+            return result;
+        }
+
+        NodeList nodeList = parent.getElementsByTagName(featureNodeName);
+
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node node = nodeList.item(i);
+
+            if (node.getParentNode().equals(parent)){
+                Element element = (Element)node;
+
+                List<Feature.Param> params = new ArrayList<>();
+                NodeList paramNodeList = element.getElementsByTagName("param");
+                for (int j = 0; j < nodeList.getLength(); j++) {
+                    Element paramElement = (Element)paramNodeList.item(j);
+                    params.add(Feature.Param.create(paramElement.getAttribute("name"), paramElement.getAttribute("value")));
+                }
+
+                Feature access = Feature.create(element.getAttribute("name"), params);
                 result.add(access);
             }
         }

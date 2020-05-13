@@ -17,6 +17,10 @@ public class PreferencesConfig {
     private IConfigProcessor configProcessor;
     private Platform platform;
 
+    /**
+     * @param configProcessor IConfigProcessor, mandatory
+     * @param platform Platform, can be null
+     */
     public PreferencesConfig(IConfigProcessor configProcessor, Platform platform){
         this.configProcessor = configProcessor;
         this.platform = platform;
