@@ -13,13 +13,14 @@ Cordova Java Client to automate tasks.
 <dependency>
 	<groupId>com.upplication</groupId>
 	<artifactId>cordova-java</artifactId>
-	<version>8.0.2</version>
+	<version>9.0.0</version>
 </dependency>
 ```
 
 The version 6.1.* works well with cordova 6.1.*
 The version 6.5.* works well with cordova 6.5.*
 The version 8.0.* works well with cordova 8.0.*
+The version 9.0.* works well with cordova 9.0.*
 
 ## How to contribute
 
@@ -161,6 +162,7 @@ cordovaProject.config().access().add("*");
 cordovaProject.config().access().add("*", "yes");
 cordovaProject.config().access().add(Access.create().origin("*").value("disable").subdomains(true));
 cordovaProject.config().preferences().add("name", "value");
+cordovaProject.config().features().add(Feature.create("name", Feature.Param.creat("name", "value")));
 // allow navigation
 cordovaProject.config().allowNavigation().add("*");
 cordovaProject.config().allowNavigation().add("http://*");
@@ -175,6 +177,8 @@ cordovaProject.config().platform(Platform.Android).splash().add(Splash.create().
 cordovaProject.config().platform(Platform.IOs).splash().add(Splash.create().src("dest/splash.png").width(320).height(100));
 // platform preferences
 cordovaProject.config().platform(Platform.Android).preferences().add("name", "value");
+// platform features
+cordovaProject.config().platform(Platform.Android).features().add(Feature.create("name", Feature.Param.creat("name", "value")));
 
 //or for better perfomance, do a transaction
 cordovaProject.config(new ConfigTransactionJob() {
@@ -201,7 +205,8 @@ String name = cordovaProject.config().author().getName();
 List<Icon> icons = cordovaProject.config().icon().getAll();
 List<Access> access = cordovaProject.config().access().getAll();
 List<AllowNavigation> = cordovaProject.config().allowNavigation().getAll();
-List<Preferences> preferences = cordovaProject.config().preferences().getAll();
+List<Preference> preferences = cordovaProject.config().preferences().getAll();
+List<Feature> features = cordovaProject.config().features().getAll();
 List<Icon> icons = cordovaProject.config().platform(Platform.Android).icon().getAll();
 List<Splash> splash = cordovaProject.config().platform(Platform.IOs).splash().getAll();
 
